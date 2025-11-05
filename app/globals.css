@@ -2,25 +2,90 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --primary: #000000;
+  --accent: #FFD700; /* Gold/Yellow */
+  --destructive: #FF0000; /* Red */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  
+  /* Mobile-first breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Custom utility classes for the project */
+.btn-primary {
+  @apply bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors;
+}
+
+.btn-accent {
+  @apply bg-yellow-400 text-black px-4 py-2 rounded-md font-medium hover:bg-yellow-500 transition-colors;
+}
+
+.btn-outline {
+  @apply border border-black text-black px-4 py-2 rounded-md font-medium hover:bg-black hover:text-white transition-colors;
+}
+
+.container {
+  @apply w-full px-4 sm:px-6 lg:px-8 xl:px-12;
+}
+
+.card {
+  @apply bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow;
+}
+
+.input-field {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent;
+}
+
+/* Mobile-first responsive utilities */
+@media (min-width: 640px) {
+  .container {
+    @apply max-w-screen-sm;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    @apply max-w-screen-md;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    @apply max-w-screen-lg;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    @apply max-w-screen-xl;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    @apply max-w-screen-2xl;
+  }
 }
