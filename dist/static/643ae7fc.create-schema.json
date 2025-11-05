@@ -1,0 +1,431 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "price",
+        "type": "number"
+      },
+      {
+        "name": "originalPrice",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "First Year",
+              "value": "first-year"
+            },
+            {
+              "title": "Second Year",
+              "value": "second-year"
+            },
+            {
+              "title": "Third Year",
+              "value": "third-year"
+            },
+            {
+              "title": "Fourth Year",
+              "value": "fourth-year"
+            },
+            {
+              "title": "Fifth Year",
+              "value": "fifth-year"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "first-year",
+                  "second-year",
+                  "third-year",
+                  "fourth-year",
+                  "fifth-year"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "academicYear",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Anatomy",
+              "value": "anatomy"
+            },
+            {
+              "title": "Physiology",
+              "value": "physiology"
+            },
+            {
+              "title": "Biochemistry",
+              "value": "biochemistry"
+            },
+            {
+              "title": "Pathology",
+              "value": "pathology"
+            },
+            {
+              "title": "Pharmacology",
+              "value": "pharmacology"
+            },
+            {
+              "title": "Microbiology",
+              "value": "microbiology"
+            },
+            {
+              "title": "Forensic Medicine",
+              "value": "forensic-medicine"
+            },
+            {
+              "title": "Community Medicine",
+              "value": "community-medicine"
+            },
+            {
+              "title": "ENT",
+              "value": "ent"
+            },
+            {
+              "title": "Ophthalmology",
+              "value": "ophthalmology"
+            },
+            {
+              "title": "Medicine",
+              "value": "medicine"
+            },
+            {
+              "title": "Surgery",
+              "value": "surgery"
+            },
+            {
+              "title": "Obstetrics & Gynecology",
+              "value": "obgyn"
+            },
+            {
+              "title": "Pediatrics",
+              "value": "pediatrics"
+            },
+            {
+              "title": "Orthopedics",
+              "value": "orthopedics"
+            },
+            {
+              "title": "Dermatology",
+              "value": "dermatology"
+            },
+            {
+              "title": "Psychiatry",
+              "value": "psychiatry"
+            },
+            {
+              "title": "Radiology",
+              "value": "radiology"
+            },
+            {
+              "title": "Anesthesiology",
+              "value": "anesthesiology"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "anatomy",
+                  "physiology",
+                  "biochemistry",
+                  "pathology",
+                  "pharmacology",
+                  "microbiology",
+                  "forensic-medicine",
+                  "community-medicine",
+                  "ent",
+                  "ophthalmology",
+                  "medicine",
+                  "surgery",
+                  "obgyn",
+                  "pediatrics",
+                  "orthopedics",
+                  "dermatology",
+                  "psychiatry",
+                  "radiology",
+                  "anesthesiology"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "subject",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "University Exam",
+              "value": "university"
+            },
+            {
+              "title": "Entrance Exam",
+              "value": "entrance"
+            },
+            {
+              "title": "Supplementary",
+              "value": "supplementary"
+            },
+            {
+              "title": "Revision Notes",
+              "value": "revision"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "university",
+                  "entrance",
+                  "supplementary",
+                  "revision"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "examType",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean"
+      }
+    ],
+    "name": "note",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "code",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              },
+              {
+                "flag": "max",
+                "constraint": 100
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "discountPercentage",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "validFrom",
+        "type": "datetime"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "validUntil",
+        "type": "datetime"
+      },
+      {
+        "initialValue": true,
+        "name": "isActive",
+        "type": "boolean"
+      },
+      {
+        "name": "usageLimit",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "name": "usedCount",
+        "type": "number"
+      }
+    ],
+    "name": "discountCode",
+    "type": "document"
+  }
+]

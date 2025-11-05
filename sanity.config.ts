@@ -1,11 +1,11 @@
-import { defineConfig } from '@sanity/cli'
-import { structureTool } from '@sanity/structure'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { noteSchema, discountCodeSchema } from './lib/sanity/schema'
 
 const config = defineConfig({
-  projectId: 't1y8nndf',
-  dataset: 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 't1y8nndf',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   plugins: [
     structureTool({
       structure: (S: any) =>
