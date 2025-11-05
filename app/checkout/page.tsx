@@ -127,7 +127,7 @@ export default function CheckoutPage() {
                   <Send className="w-5 h-5 mr-2" />
                   Contact on Telegram
                 </a>
-                <Link href="/" className="btn-outline">
+                <Link href="/" className="btn-outline-light">
                   Continue Shopping
                 </Link>
               </div>

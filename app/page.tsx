@@ -30,7 +30,7 @@ export default async function Home() {
                   Browse All Notes
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
-                <Link href="#featured" className="btn-outline text-lg px-6 py-3">
+                <Link href="#featured" className="btn-outline-light text-lg px-6 py-3">
                   View Featured
                 </Link>
               </div>
@@ -142,7 +142,7 @@ export default async function Home() {
             </div>
             
             <div className="text-center mt-8">
-              <Link href="/notes" className="btn-outline">
+              <Link href="/notes" className="btn-outline-light">
                 View All Notes
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Link>

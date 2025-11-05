@@ -304,7 +304,7 @@ export default function NotesPage() {
               </p>
               <button
                 onClick={clearFilters}
-                className="btn-outline"
+                className="btn-outline-light"
               >
                 Clear Filters
               </button>
