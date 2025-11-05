@@ -6,15 +6,24 @@ export interface Note {
   description: string;
   price: number;
   originalPrice?: number;
-  images: {
+  coverImage: {
     asset: {
       _ref: string;
       _type: string;
     };
+  };
+  images: {
+    _key?: string;
+    _type: string;
+    asset?: {
+      _id: string;
+      _type: string;
+      url?: string;
+      metadata?: any;
+    };
   }[];
   academicYear: string;
   subject: string;
-  examType: string;
   tags: string[];
   featured: boolean;
   createdAt: string;
@@ -58,7 +67,6 @@ export interface ApiResponse<T> {
 export interface NoteFilters {
   academicYear?: string;
   subject?: string;
-  examType?: string;
   priceRange?: {
     min: number;
     max: number;

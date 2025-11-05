@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  ArrowLeft, 
-  ShoppingCart, 
-  Star, 
-  Share2, 
-  Heart, 
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Star,
+  Share2,
+  Heart,
   Download,
   BookOpen,
   Calendar,
@@ -21,63 +21,51 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { useCart } from '@/lib/cart-context';
 import { Note } from '@/types';
-
-// Placeholder data for now
-const placeholderNote: Note = {
-  _id: '1',
-  title: 'Anatomy Complete Notes',
-  slug: 'anatomy-complete-notes',
-  description: 'Comprehensive anatomy notes covering all topics with detailed diagrams. These notes have been carefully crafted to help MBBS students understand complex anatomical structures and relationships. Each topic is explained with clear illustrations and mnemonics to aid in memorization.',
-  price: 299,
-  originalPrice: 399,
-  images: [
-    {
-      asset: {
-        _ref: 'image-1',
-        _type: 'reference'
-      }
-    },
-    {
-      asset: {
-        _ref: 'image-2',
-        _type: 'reference'
-      }
-    },
-    {
-      asset: {
-        _ref: 'image-3',
-        _type: 'reference'
-      }
-    }
-  ],
-  academicYear: 'first-year',
-  subject: 'anatomy',
-  examType: 'university',
-  tags: ['anatomy', 'first-year', 'diagrams', 'comprehensive'],
-  featured: true,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
+import { getNoteBySlug } from '@/lib/sanity/api';
+import { urlFor } from '@/lib/sanity/client';
 
 export default function NotePage() {
   const params = useParams();
   const slug = params.slug as string;
   
-  // In a real app, we would fetch the note data based on the slug
-  const [note] = useState<Note>(placeholderNote);
+  const [note, setNote] = useState<Note | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const { addToCart } = useCart();
 
+  // Fetch the note data based on the slug
+  useEffect(() => {
+    async function fetchNote() {
+      try {
+        const noteData = await getNoteBySlug(slug);
+        console.log("Fetched note data:", noteData);
+        console.log("Images array:", noteData?.images);
+        if (noteData?.images && noteData.images.length > 0) {
+          console.log("First image:", noteData.images[0]);
+          console.log("Image URL:", urlFor(noteData.images[0]).url());
+        }
+        setNote(noteData);
+      } catch (error) {
+        console.error("Failed to fetch note:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchNote();
+  }, [slug]);
+
   const handleAddToCart = () => {
-    addToCart(note);
-    setIsAddedToCart(true);
-    setTimeout(() => setIsAddedToCart(false), 2000);
+    if (note) {
+      addToCart(note);
+      setIsAddedToCart(true);
+      setTimeout(() => setIsAddedToCart(false), 2000);
+    }
   };
 
   const handleShare = () => {
-    if (navigator.share) {
+    if (note && navigator.share) {
       navigator.share({
         title: note.title,
         text: note.description,
@@ -96,11 +84,15 @@ export default function NotePage() {
   };
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % note.images.length);
+    if (note && note.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % note.images.length);
+    }
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + note.images.length) % note.images.length);
+    if (note && note.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + note.images.length) % note.images.length);
+    }
   };
 
   const formatSubject = (subject: string) => {
@@ -111,9 +103,40 @@ export default function NotePage() {
     return year.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const formatExamType = (type: string) => {
-    return type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow bg-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading note details...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!note) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow bg-white flex items-center justify-center">
+          <div className="text-center">
+            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-700 mb-2">Note Not Found</h1>
+            <p className="text-gray-500 mb-4">The note you're looking for doesn't exist or has been removed.</p>
+            <Link href="/notes" className="btn-primary">
+              Browse All Notes
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -132,55 +155,98 @@ export default function NotePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Image Gallery */}
             <div>
-              <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                <TransformWrapper>
-                  <TransformComponent>
-                    <div className="w-full h-full flex items-center justify-center">
-                      {/* Placeholder for image */}
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <BookOpen className="w-24 h-24 text-gray-400" />
-                      </div>
+              {note.images && note.images.length > 0 ? (
+                <div>
+                  <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                    <TransformWrapper>
+                      <TransformComponent>
+                        <div className="w-full h-full flex items-center justify-center">
+                          {note.images[currentImageIndex]?.asset ? (
+                            <Image
+                              src={urlFor(note.images[currentImageIndex]).width(800).height(600).url()}
+                              alt={`${note.title} - Page ${currentImageIndex + 1}`}
+                              fill
+                              className="object-contain"
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              onError={(e) => {
+                                console.error("Image failed to load:", e);
+                                console.error("Image URL:", urlFor(note.images[currentImageIndex]).width(800).height(600).url());
+                              }}
+                              onLoad={() => {
+                                console.log("Image loaded successfully");
+                              }}
+                            />
+                          ) : (
+                            <div className="text-center text-gray-500">
+                              <BookOpen className="w-16 h-16 mx-auto mb-2" />
+                              <p>Image not available</p>
+                            </div>
+                          )}
+                        </div>
+                      </TransformComponent>
+                    </TransformWrapper>
+                    
+                    {/* Navigation Arrows */}
+                    {note.images.length > 1 && (
+                      <>
+                        <button
+                          onClick={prevImage}
+                          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+                          aria-label="Previous image"
+                        >
+                          <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={nextImage}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+                          aria-label="Next image"
+                        >
+                          <ArrowLeft className="w-5 h-5 rotate-180" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Thumbnail Gallery */}
+                  {note.images.length > 1 && (
+                    <div className="flex gap-2 mt-4 overflow-x-auto">
+                      {note.images.map((image, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
+                            index === currentImageIndex ? 'border-yellow-400' : 'border-gray-200'
+                          }`}
+                        >
+                          <div className="relative w-full h-full">
+                            {image?.asset ? (
+                              <Image
+                                src={urlFor(image).width(80).height(80).url()}
+                                alt={`${note.title} - Page ${index + 1}`}
+                                fill
+                                className="object-cover"
+                                sizes="80px"
+                                onError={(e) => {
+                                  console.error("Thumbnail failed to load:", e);
+                                  console.error("Thumbnail URL:", urlFor(image).width(80).height(80).url());
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <BookOpen className="w-6 h-6 text-gray-400" />
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
                     </div>
-                  </TransformComponent>
-                </TransformWrapper>
-                
-                {/* Navigation Arrows */}
-                {note.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
-                      aria-label="Previous image"
-                    >
-                      <ArrowLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
-                      aria-label="Next image"
-                    >
-                      <ArrowLeft className="w-5 h-5 rotate-180" />
-                    </button>
-                  </>
-                )}
-              </div>
-              
-              {/* Thumbnail Gallery */}
-              {note.images.length > 1 && (
-                <div className="flex gap-2 mt-4 overflow-x-auto">
-                  {note.images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
-                        index === currentImageIndex ? 'border-yellow-400' : 'border-gray-200'
-                      }`}
-                    >
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <BookOpen className="w-8 h-8 text-gray-400" />
-                      </div>
-                    </button>
-                  ))}
+                  )}
+                </div>
+              ) : (
+                <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <BookOpen className="w-24 h-24 text-gray-400" />
+                  </div>
                 </div>
               )}
             </div>
@@ -194,9 +260,6 @@ export default function NotePage() {
                 </span>
                 <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-semibold rounded">
                   {formatAcademicYear(note.academicYear)}
-                </span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded">
-                  {formatExamType(note.examType)}
                 </span>
               </div>
 
@@ -221,17 +284,19 @@ export default function NotePage() {
               </div>
 
               {/* Tags */}
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-2">Tags</h2>
-                <div className="flex flex-wrap gap-2">
-                  {note.tags.map((tag, index) => (
-                    <span key={index} className="flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                      <Tag className="w-3 h-3 mr-1" />
-                      {tag}
-                    </span>
-                  ))}
+              {note.tags && note.tags.length > 0 && (
+                <div className="mb-6">
+                  <h2 className="text-lg font-semibold mb-2">Tags</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {note.tags.map((tag, index) => (
+                      <span key={index} className="flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                        <Tag className="w-3 h-3 mr-1" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Additional Info */}
               <div className="mb-6">

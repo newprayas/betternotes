@@ -16,10 +16,6 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
       conditions.push(`subject == "${filters.subject}"`);
     }
     
-    if (filters.examType) {
-      conditions.push(`examType == "${filters.examType}"`);
-    }
-    
     if (filters.priceRange) {
       conditions.push(`price >= ${filters.priceRange.min} && price <= ${filters.priceRange.max}`);
     }
@@ -36,14 +32,23 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
   query += `] | order(createdAt desc) {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     description,
     price,
     originalPrice,
-    images,
+    coverImage,
+    images[]{
+      _key,
+      _type,
+      asset->{
+        _id,
+        _type,
+        url,
+        metadata
+      }
+    },
     academicYear,
     subject,
-    examType,
     tags,
     featured,
     createdAt,
@@ -58,14 +63,23 @@ export async function getFeaturedNotes(): Promise<Note[]> {
   const query = `*[_type == "note" && featured == true] | order(createdAt desc) {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     description,
     price,
     originalPrice,
-    images,
+    coverImage,
+    images[]{
+      _key,
+      _type,
+      asset->{
+        _id,
+        _type,
+        url,
+        metadata
+      }
+    },
     academicYear,
     subject,
-    examType,
     tags,
     featured,
     createdAt,
@@ -80,14 +94,23 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
   const query = `*[_type == "note" && slug.current == "${slug}"][0] {
     _id,
     title,
-    slug,
+    "slug": slug.current,
     description,
     price,
     originalPrice,
-    images,
+    coverImage,
+    images[]{
+      _key,
+      _type,
+      asset->{
+        _id,
+        _type,
+        url,
+        metadata
+      }
+    },
     academicYear,
     subject,
-    examType,
     tags,
     featured,
     createdAt,
@@ -138,11 +161,5 @@ export async function getAcademicYears(): Promise<string[]> {
 // Get all unique subjects
 export async function getSubjects(): Promise<string[]> {
   const query = `*[_type == "note"] | distinct(subject)`;
-  return await client.fetch(query);
-}
-
-// Get all unique exam types
-export async function getExamTypes(): Promise<string[]> {
-  const query = `*[_type == "note"] | distinct(examType)`;
   return await client.fetch(query);
 }

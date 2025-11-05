@@ -5,61 +5,11 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { getFeaturedNotes } from '@/lib/sanity/api';
 import { Note } from '@/types';
+import { urlFor } from '@/lib/sanity/client';
 
-// This would normally be fetched from Sanity
-// For now, we'll use placeholder data
-const featuredNotes: Note[] = [
-  {
-    _id: '1',
-    title: 'Anatomy Complete Notes',
-    slug: 'anatomy-complete-notes',
-    description: 'Comprehensive anatomy notes covering all topics with detailed diagrams.',
-    price: 299,
-    originalPrice: 399,
-    images: [],
-    academicYear: 'first-year',
-    subject: 'anatomy',
-    examType: 'university',
-    tags: ['anatomy', 'first-year', 'diagrams'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '2',
-    title: 'Physiology Made Easy',
-    slug: 'physiology-made-easy',
-    description: 'Simplified physiology notes with flowcharts and mnemonics.',
-    price: 249,
-    originalPrice: 349,
-    images: [],
-    academicYear: 'first-year',
-    subject: 'physiology',
-    examType: 'university',
-    tags: ['physiology', 'first-year', 'mnemonics'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '3',
-    title: 'Pharmacology Drug Charts',
-    slug: 'pharmacology-drug-charts',
-    description: 'Complete drug classification and mechanism charts.',
-    price: 349,
-    originalPrice: 449,
-    images: [],
-    academicYear: 'second-year',
-    subject: 'pharmacology',
-    examType: 'university',
-    tags: ['pharmacology', 'second-year', 'charts'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
-
-export default function Home() {
+export default async function Home() {
+  // We now fetch the data live from Sanity instead of using a placeholder!
+  const featuredNotes: Note[] = await getFeaturedNotes();
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -136,8 +86,20 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {featuredNotes.map((note) => (
                 <div key={note._id} className="card p-6 hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <BookOpen className="w-12 h-12 text-gray-400" />
+                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
+                    {note.coverImage ? (
+                      <Image
+                        src={urlFor(note.coverImage).url()}
+                        alt={note.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                   
                   <div className="mb-2">

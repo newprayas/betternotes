@@ -2,111 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Filter, Star, BookOpen, X } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Note, NoteFilters } from '@/types';
-import { getNotes, getAcademicYears, getSubjects, getExamTypes } from '@/lib/sanity/api';
+import { getNotes, getAcademicYears, getSubjects } from '@/lib/sanity/api';
+import { urlFor } from '@/lib/sanity/client';
 
-// Placeholder data for now
-const placeholderNotes: Note[] = [
-  {
-    _id: '1',
-    title: 'Anatomy Complete Notes',
-    slug: 'anatomy-complete-notes',
-    description: 'Comprehensive anatomy notes covering all topics with detailed diagrams.',
-    price: 299,
-    originalPrice: 399,
-    images: [],
-    academicYear: 'first-year',
-    subject: 'anatomy',
-    examType: 'university',
-    tags: ['anatomy', 'first-year', 'diagrams'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '2',
-    title: 'Physiology Made Easy',
-    slug: 'physiology-made-easy',
-    description: 'Simplified physiology notes with flowcharts and mnemonics.',
-    price: 249,
-    originalPrice: 349,
-    images: [],
-    academicYear: 'first-year',
-    subject: 'physiology',
-    examType: 'university',
-    tags: ['physiology', 'first-year', 'mnemonics'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '3',
-    title: 'Biochemistry Essentials',
-    slug: 'biochemistry-essentials',
-    description: 'Essential biochemistry concepts with metabolic pathways.',
-    price: 279,
-    originalPrice: 379,
-    images: [],
-    academicYear: 'first-year',
-    subject: 'biochemistry',
-    examType: 'university',
-    tags: ['biochemistry', 'first-year', 'pathways'],
-    featured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '4',
-    title: 'Pharmacology Drug Charts',
-    slug: 'pharmacology-drug-charts',
-    description: 'Complete drug classification and mechanism charts.',
-    price: 349,
-    originalPrice: 449,
-    images: [],
-    academicYear: 'second-year',
-    subject: 'pharmacology',
-    examType: 'university',
-    tags: ['pharmacology', 'second-year', 'charts'],
-    featured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '5',
-    title: 'Pathology Illustrated',
-    slug: 'pathology-illustrated',
-    description: 'Visual pathology notes with disease mechanisms.',
-    price: 329,
-    originalPrice: 429,
-    images: [],
-    academicYear: 'second-year',
-    subject: 'pathology',
-    examType: 'university',
-    tags: ['pathology', 'second-year', 'illustrated'],
-    featured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '6',
-    title: 'Microbiology Quick Review',
-    slug: 'microbiology-quick-review',
-    description: 'Quick review of important microbiology concepts.',
-    price: 299,
-    originalPrice: 399,
-    images: [],
-    academicYear: 'second-year',
-    subject: 'microbiology',
-    examType: 'revision',
-    tags: ['microbiology', 'second-year', 'review'],
-    featured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
 
 const academicYears = [
   { value: 'first-year', label: 'First Year' },
@@ -133,19 +36,30 @@ const subjects = [
   { value: 'pediatrics', label: 'Pediatrics' },
 ];
 
-const examTypes = [
-  { value: 'university', label: 'University Exam' },
-  { value: 'entrance', label: 'Entrance Exam' },
-  { value: 'supplementary', label: 'Supplementary' },
-  { value: 'revision', label: 'Revision Notes' },
-];
 
 export default function NotesPage() {
-  const [notes, setNotes] = useState<Note[]>(placeholderNotes);
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>(placeholderNotes);
+  const [notes, setNotes] = useState<Note[]>([]); // Start with an empty array
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]); // Start with an empty array
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<NoteFilters>({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
+
+  // Fetch data from Sanity when the component mounts
+  useEffect(() => {
+    async function fetchNotes() {
+      try {
+        const liveNotes = await getNotes();
+        setNotes(liveNotes);
+        setFilteredNotes(liveNotes);
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchNotes();
+  }, []);
 
   useEffect(() => {
     // Apply filters and search
@@ -168,9 +82,6 @@ export default function NotesPage() {
       result = result.filter(note => note.subject === filters.subject);
     }
 
-    if (filters.examType) {
-      result = result.filter(note => note.examType === filters.examType);
-    }
 
     setFilteredNotes(result);
   }, [notes, searchTerm, filters]);
@@ -283,24 +194,6 @@ export default function NotesPage() {
                     </select>
                   </div>
 
-                  {/* Exam Type Filter */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Exam Type
-                    </label>
-                    <select
-                      value={filters.examType || ''}
-                      onChange={(e) => handleFilterChange('examType', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                    >
-                      <option value="">All Types</option>
-                      {examTypes.map(type => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
               </div>
             )}
@@ -330,17 +223,6 @@ export default function NotesPage() {
                     </button>
                   </span>
                 )}
-                {filters.examType && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
-                    Type: {examTypes.find(t => t.value === filters.examType)?.label}
-                    <button
-                      onClick={() => handleFilterChange('examType', '')}
-                      className="ml-2 text-gray-500 hover:text-gray-700"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
               </div>
             )}
           </div>
@@ -353,12 +235,26 @@ export default function NotesPage() {
           </div>
 
           {/* Notes Grid */}
-          {filteredNotes.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">Loading notes...</div>
+          ) : filteredNotes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotes.map((note) => (
                 <div key={note._id} className="card p-6 hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <BookOpen className="w-12 h-12 text-gray-400" />
+                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
+                    {note.coverImage ? (
+                      <Image
+                        src={urlFor(note.coverImage).url()}
+                        alt={note.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                   
                   <div className="mb-2">

@@ -103,17 +103,19 @@ export const noteSchema = {
       validation: (Rule: any) => Rule.required(),
     },
     {
-      name: 'examType',
-      title: 'Exam Type',
-      type: 'string',
+      name: 'coverImage',
+      title: 'Cover Image',
+      type: 'image',
       options: {
-        list: [
-          { title: 'University Exam', value: 'university' },
-          { title: 'Entrance Exam', value: 'entrance' },
-          { title: 'Supplementary', value: 'supplementary' },
-          { title: 'Revision Notes', value: 'revision' },
-        ],
+        hotspot: true,
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+        },
+      ],
       validation: (Rule: any) => Rule.required(),
     },
     {
@@ -133,7 +135,7 @@ export const noteSchema = {
     select: {
       title: 'title',
       subtitle: 'subject',
-      media: 'images.0',
+      media: 'coverImage',
     },
   },
 };
