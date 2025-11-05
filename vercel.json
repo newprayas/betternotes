@@ -3,15 +3,5 @@
   "outputDirectory": ".next",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["sin1"],
-  "env": {
-    "NEXT_PUBLIC_SANITY_PROJECT_ID": "@sanity_project_id",
-    "NEXT_PUBLIC_SANITY_DATASET": "@sanity_dataset"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_SANITY_PROJECT_ID": "@sanity_project_id",
-      "NEXT_PUBLIC_SANITY_DATASET": "@sanity_dataset"
-    }
-  }
+  "regions": ["sin1"]
 }
