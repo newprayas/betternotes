@@ -16,7 +16,6 @@ import {
   Tag,
   Check
 } from 'lucide-react';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { useCart } from '@/lib/cart-context';
@@ -158,47 +157,40 @@ export default function NotePage() {
               {note.images && note.images.length > 0 ? (
                 <div>
                   <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                    <TransformWrapper>
-                      <TransformComponent>
-                        <div className="w-full h-full flex items-center justify-center">
-                          {note.images[currentImageIndex]?.asset ? (
-                            <Image
-                              src={urlFor(note.images[currentImageIndex]).width(800).height(600).url()}
-                              alt={`${note.title} - Page ${currentImageIndex + 1}`}
-                              fill
-                              className="object-contain"
-                              sizes="(max-width: 768px) 100vw, 50vw"
-                              onError={(e) => {
-                                console.error("Image failed to load:", e);
-                                console.error("Image URL:", urlFor(note.images[currentImageIndex]).width(800).height(600).url());
-                              }}
-                              onLoad={() => {
-                                console.log("Image loaded successfully");
-                              }}
-                            />
-                          ) : (
-                            <div className="text-center text-gray-500">
-                              <BookOpen className="w-16 h-16 mx-auto mb-2" />
-                              <p>Image not available</p>
-                            </div>
-                          )}
+                    {note.images[currentImageIndex]?.asset ? (
+                      <Image
+                        src={urlFor(note.images[currentImageIndex]).width(800).url()}
+                        alt={`${note.title} - Page ${currentImageIndex + 1}`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={currentImageIndex === 0}
+                        onError={(e) => {
+                          console.error("Image failed to load:", e);
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-center text-gray-500">
+                        <div>
+                          <BookOpen className="w-16 h-16 mx-auto mb-2" />
+                          <p>Image not available</p>
                         </div>
-                      </TransformComponent>
-                    </TransformWrapper>
+                      </div>
+                    )}
                     
                     {/* Navigation Arrows */}
                     {note.images.length > 1 && (
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-all"
                           aria-label="Previous image"
                         >
                           <ArrowLeft className="w-5 h-5" />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-all"
                           aria-label="Next image"
                         >
                           <ArrowLeft className="w-5 h-5 rotate-180" />
