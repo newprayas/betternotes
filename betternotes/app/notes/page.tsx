@@ -8,7 +8,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import DynamicNotesSection from '@/components/notes/dynamic-notes-section';
 import { Note, NoteFilters } from '@/types';
-import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme } from '@/lib/sanity/api';
+import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
 import { useCart } from '@/lib/cart-context';
 
@@ -41,7 +41,7 @@ export default function NotesPage() {
   const [subjectYearCombinations, setSubjectYearCombinations] = useState<{academicYear: string, subject: string}[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<NoteFilters>({});
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [expandedYear, setExpandedYear] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart, removeFromCart, cart } = useCart();
 
@@ -66,19 +66,10 @@ export default function NotesPage() {
   }, []);
 
   useEffect(() => {
-    // Apply filters
-    let result = [...notes];
-
-    if (filters.academicYear) {
-      result = result.filter(note => note.academicYear === filters.academicYear);
-    }
-
-    if (filters.subject) {
-      result = result.filter(note => note.subject === filters.subject);
-    }
-
-    setFilteredNotes(result);
-  }, [notes, filters]);
+    // Don't apply filters - show all notes always
+    // Filters are only used for navigation/highlighting
+    setFilteredNotes(notes);
+  }, [notes]);
 
   const handleFilterChange = (filterType: keyof NoteFilters, value: string) => {
     setFilters(prev => ({
@@ -89,9 +80,26 @@ export default function NotesPage() {
 
   const clearFilters = () => {
     setFilters({});
+    setExpandedYear(null);
   };
 
   const activeFiltersCount = Object.values(filters).filter(Boolean).length;
+
+  const handleYearClick = (year: string) => {
+    if (expandedYear === year) {
+      setExpandedYear(null);
+    } else {
+      setExpandedYear(year);
+    }
+  };
+
+  const handleSubjectClick = (academicYear: string, subject: string) => {
+    setFilters({ academicYear, subject });
+    const element = document.getElementById(`${academicYear}-${subject}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Group combinations by academic year
   const groupedByYear = subjectYearCombinations.reduce((acc, combination) => {
@@ -114,107 +122,43 @@ export default function NotesPage() {
             <p className="text-gray-600">Browse our comprehensive collection of medical notes</p>
           </div>
 
-          {/* Filters */}
+          {/* Year Pills Filter */}
           <div className="mb-8">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-              {/* Filter Toggle Button */}
-              <button
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <Filter className="w-5 h-5 mr-2" />
-                Filters
-                {activeFiltersCount > 0 && (
-                  <span className="ml-2 px-2 py-1 bg-yellow-400 text-black text-xs font-semibold rounded-lg">
-                    {activeFiltersCount}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Filters Panel */}
-            {isFilterOpen && (
-              <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-lg">Filter Notes</h3>
+            <div className="flex flex-col gap-3 mb-6">
+              {academicYears.slice().reverse().map(year => (
+                <div key={year.value}>
                   <button
-                    onClick={clearFilters}
-                    className="text-sm text-gray-500 hover:text-gray-700"
+                    onClick={() => handleYearClick(year.value)}
+                    className={`px-6 py-3 font-bold rounded-full transition-colors ${
+                      expandedYear === year.value
+                        ? 'bg-red-700 text-white border-2 border-white'
+                        : 'bg-white text-red-700 border-2 border-red-700 hover:bg-red-50'
+                    }`}
                   >
-                    Clear All
+                    {year.label}
                   </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Academic Year Filter */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Academic Year
-                    </label>
-                    <select
-                      value={filters.academicYear || ''}
-                      onChange={(e) => handleFilterChange('academicYear', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                    >
-                      <option value="">All Years</option>
-                      {academicYears.map(year => (
-                        <option key={year.value} value={year.value}>
-                          {year.label}
-                        </option>
+                  
+                  {/* Subject Pills - Show when year is expanded */}
+                  {expandedYear === year.value && groupedByYear[year.value] && (
+                    <div className="flex flex-wrap gap-2 mt-3 ml-4">
+                      {groupedByYear[year.value].map(subject => (
+                        <button
+                          key={`${year.value}-${subject}`}
+                          onClick={() => handleSubjectClick(year.value, subject)}
+                          className={`px-4 py-2 font-semibold rounded-full transition-colors ${
+                            filters.subject === subject && filters.academicYear === year.value
+                              ? 'bg-red-700 text-white border-2 border-white'
+                              : 'bg-white text-red-700 border-2 border-red-700 hover:bg-red-50'
+                          }`}
+                        >
+                          {getSubjectLabel(subject)}
+                        </button>
                       ))}
-                    </select>
-                  </div>
-
-                  {/* Subject Filter */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Subject
-                    </label>
-                    <select
-                      value={filters.subject || ''}
-                      onChange={(e) => handleFilterChange('subject', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                    >
-                      <option value="">All Subjects</option>
-                      {subjects.map(subject => (
-                        <option key={subject.value} value={subject.value}>
-                          {subject.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-
-            {/* Active Filters Display */}
-            {activeFiltersCount > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {filters.academicYear && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-lg text-sm bg-gray-100 text-gray-800">
-                    Academic Year: {academicYears.find(y => y.value === filters.academicYear)?.label}
-                    <button
-                      onClick={() => handleFilterChange('academicYear', '')}
-                      className="ml-2 text-gray-500 hover:text-gray-700"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
-                {filters.subject && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-lg text-sm bg-gray-100 text-gray-800">
-                    Subject: {subjects.find(s => s.value === filters.subject)?.label}
-                    <button
-                      onClick={() => handleFilterChange('subject', '')}
-                      className="ml-2 text-gray-500 hover:text-gray-700"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
           {/* Results Count */}
@@ -236,7 +180,7 @@ export default function NotesPage() {
                 
                 return (
                   <div key={year}>
-                    <div className={`${yearColors.bg} border-l-4 ${yearColors.border} p-4 rounded-lg mb-6 inline-block`}>
+                    <div className={`${yearColors.bg} border-4 ${yearColors.border} p-4 rounded-lg mb-6 inline-block`}>
                       <h2 className="text-2xl font-bold text-black">{yearLabel}</h2>
                     </div>
                     

@@ -38,6 +38,11 @@ export const noteSchema = {
       type: 'number',
     },
     {
+      name: 'pageNumber',
+      title: 'Page Number',
+      type: 'number',
+    },
+    {
       name: 'images',
       title: 'Images',
       type: 'array',

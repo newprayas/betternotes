@@ -36,6 +36,7 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
     description,
     price,
     originalPrice,
+    pageNumber,
     coverImage,
     images[]{
       _key,
@@ -67,6 +68,7 @@ export async function getFeaturedNotes(): Promise<Note[]> {
     description,
     price,
     originalPrice,
+    pageNumber,
     coverImage,
     images[]{
       _key,
@@ -98,6 +100,7 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
     description,
     price,
     originalPrice,
+    pageNumber,
     coverImage,
     images[]{
       _key,
@@ -220,9 +223,9 @@ export function getSubjectLabel(subjectValue: string): string {
 // Helper function to get year label from value
 export function getYearLabel(yearValue: string): string {
   const yearLabels: Record<string, string> = {
-    'third-year': '3rd Year',
-    'fourth-year': '4th Year',
-    'fifth-year': '5th Year',
+    'third-year': '3rd Year MBBS',
+    'fourth-year': '4th Year MBBS',
+    'fifth-year': '5th Year MBBS',
   };
   
   return yearLabels[yearValue] || yearValue;

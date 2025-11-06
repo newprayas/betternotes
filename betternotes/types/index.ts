@@ -6,6 +6,7 @@ export interface Note {
   description: string;
   price: number;
   originalPrice?: number;
+  pageNumber?: number;
   coverImage: {
     asset: {
       _ref: string;

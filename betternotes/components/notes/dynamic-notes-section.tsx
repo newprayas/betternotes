@@ -24,17 +24,26 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
   if (filteredNotes.length === 0) return null;
 
   return (
-    <div className="mb-8">
-      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 p-3 rounded-lg mb-4 inline-block">
-        <h3 className="text-xl font-semibold text-black">{subjectLabel}</h3>
+    <div id={`${academicYear}-${subject}`} className="mb-8 scroll-mt-24">
+      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-400 p-3 rounded-lg mb-4 inline-block">
+        <h3 className="text-lg font-bold text-gray-800">{subjectLabel}</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNotes.map((note) => (
-          <div key={note._id} className="card p-6 hover:shadow-lg transition-shadow">
+          <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-bold mb-3">{note.title}</h3>
             
-            <div className="flex items-center justify-between mb-4">
-              <div>
+            <div className="flex flex-col items-start mb-4">
+              {note.pageNumber ? (
+                <div className="text-lg font-bold text-black mb-2">
+                  Page {note.pageNumber}
+                </div>
+              ) : (
+                <div className="text-lg font-bold text-gray-400 mb-2">
+                  Page N/A
+                </div>
+              )}
+              <div className="flex items-center">
                 {note.originalPrice && (
                   <span className="text-gray-400 line-through text-sm mr-2">
                     ৳{note.originalPrice}
@@ -59,7 +68,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
                 }}
                 className={`px-4 py-2 font-bold rounded-lg transition-colors ${
                   cart.items.some(item => item.note._id === note._id)
-                    ? 'bg-red-600 text-white hover:bg-red-700'
+                    ? 'bg-red-100 text-red-700 hover:bg-red-200 border border-red-300'
                     : 'bg-yellow-400 text-black hover:bg-yellow-500'
                 }`}
               >
