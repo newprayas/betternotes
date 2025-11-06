@@ -51,7 +51,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
             
             <div className="flex gap-2">
               <Link href={`/notes/${note.slug}`} className="bg-white border-2 border-red-600 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-red-50 transition-colors text-sm">
-                View Details
+                See Samples
               </Link>
               <button
                 onClick={() => {

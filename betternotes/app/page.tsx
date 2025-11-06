@@ -30,6 +30,43 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* About Section */}
+        <section id="about" className="py-12 md:py-16 bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="mb-8">
+                  <div className="w-48 h-64 mx-auto overflow-hidden mb-4 rounded-full">
+                    <Image
+                      src="/Asset/autho.jpeg"
+                      alt="Prayas Raj Ojha"
+                      width={192}
+                      height={256}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-2">@Prayas Raj Ojha</h3>
+                </div>
+                
+                <div className="mb-8">
+                  <div className="space-y-2">
+                    <p className="text-lg font-bold">Honours in Anatomy</p>
+                    <p className="text-lg font-bold">Honours in Community Medicine</p>
+                    <p className="text-lg font-bold">Honours in Microbiology</p>
+                    <p className="text-lg font-bold">Honours in Pharmacology</p>
+                    <p className="text-lg font-bold">Rank 1 in CMC - 2nd PROF</p>
+                    <p className="text-lg font-bold">Rank 7 in CMC - FINAL PROF</p>
+                  </div>
+                </div>
+                
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-black mb-2">Chittagong Medical College</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-12 md:py-16 bg-white">
           <div className="container">
@@ -70,44 +107,6 @@ export default async function Home() {
           <div className="container">
             <div className="max-w-4xl mx-auto">
               <ImageSlideshow />
-            </div>
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section id="about" className="py-12 md:py-16 bg-white">
-          <div className="container">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="mb-8">
-                  <div className="w-48 h-64 mx-auto overflow-hidden mb-4 rounded-full">
-                    <Image
-                      src="/Asset/autho.png"
-                      alt="Prayas Raj Ojha"
-                      width={192}
-                      height={256}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-2">@Prayas Raj Ojha</h3>
-                </div>
-                
-                <div className="mb-8">
-                  <div className="space-y-2">
-                    <p className="text-lg font-bold">Honours in Anatomy</p>
-                    <p className="text-lg font-bold">Honours in Community Medicine</p>
-                    <p className="text-lg font-bold">Honours in Microbiology</p>
-                    <p className="text-lg font-bold">Honours in Pharmacology</p>
-                    <p className="text-lg font-bold">Rank 1 in CMC - 2nd PROF</p>
-                    <p className="text-lg font-bold">Rank 7 in CMC - FINAL PROF</p>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <h4 className="text-lg font-semibold text-black mb-2">Chittagong Medical College</h4>
-                  <p className="text-gray-600">Creating high-quality medical notes to help fellow students excel in their MBBS journey.</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>

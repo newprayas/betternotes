@@ -14,7 +14,7 @@ const ImageSlideshow = () => {
     if (!isPaused) {
       intervalRef.current = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 1000); // Change image every 1 second
+      }, 2800); // Change image every 2 seconds
     }
 
     return () => {
@@ -32,11 +32,21 @@ const ImageSlideshow = () => {
     setIsPaused(false);
   };
 
+  const handleTouchStart = () => {
+    setIsPaused(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsPaused(false);
+  };
+
   return (
-    <div 
-      className="relative w-full h-64 md:h-96 overflow-hidden bg-gray-100 rounded-lg"
+    <div
+      className="relative w-full h-96 md:h-[32rem] overflow-hidden bg-gray-100 rounded-lg"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div className="flex h-full transition-transform duration-500 ease-in-out"
            style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
