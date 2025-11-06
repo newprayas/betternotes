@@ -140,11 +140,6 @@ export default function NotesPage() {
               ))}
             </div>
             
-            {/* Yellow divider line - Show when year is expanded */}
-            {expandedYear && (
-              <div className="border-t-4 border-yellow-400 mb-6"></div>
-            )}
-            
             {/* Subject Pills - Show when year is expanded */}
             {expandedYear && groupedByYear[expandedYear] && (
               <div className="flex flex-wrap gap-2 mb-6">

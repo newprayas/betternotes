@@ -265,7 +265,7 @@ export default function NotePage() {
               </div>
 
               {/* Pages Info - Prominent Display */}
-              <div className="mb-6 inline-block">
+              <div className="mb-8 inline-block">
                 <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
                   <span className="text-lg font-semibold text-black">
                     Pages: {note.pageNumber || 'N/A'}
@@ -282,7 +282,7 @@ export default function NotePage() {
                         ৳{note.originalPrice}
                       </span>
                     )}
-                    <span className="text-lg font-semibold text-black">৳{note.price}</span>
+                    <span className="text-lg font-semibold text-black">Price: ৳{note.price}</span>
                     {note.originalPrice && (
                       <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
                         {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF
@@ -300,14 +300,14 @@ export default function NotePage() {
                     onClick={handleAddToCart}
                     className={`flex items-center px-4 py-2 rounded-lg font-bold transition-colors inline-flex whitespace-nowrap text-base self-start ${
                       cart.items.some(item => item.note._id === note._id)
-                        ? 'bg-red-600 text-white hover:bg-red-700'
+                        ? 'bg-red-100 text-red-700 hover:bg-red-200 border border-red-300'
                         : 'bg-yellow-400 text-black hover:bg-yellow-500'
                     }`}
                   >
                     {cart.items.some(item => item.note._id === note._id) ? (
                       <>
                         <X className="w-4 h-4 mr-2" />
-                        Remove from Cart
+                        Remove
                       </>
                     ) : (
                       <>
