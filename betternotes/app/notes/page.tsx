@@ -124,41 +124,40 @@ export default function NotesPage() {
 
           {/* Year Pills Filter */}
           <div className="mb-8">
-            <div className="flex flex-col gap-3 mb-6">
+            <div className="flex flex-wrap gap-3 mb-6">
               {academicYears.slice().reverse().map(year => (
-                <div key={year.value}>
+                <button
+                  key={year.value}
+                  onClick={() => handleYearClick(year.value)}
+                  className={`px-6 py-3 font-bold rounded-full transition-colors ${
+                    expandedYear === year.value
+                      ? 'bg-red-700 text-white border-2 border-white shadow-[0_0_0_2px_white,0_0_0_4px_red]'
+                      : 'bg-white text-red-700 border-2 border-red-700 hover:bg-red-50'
+                  }`}
+                >
+                  {year.label}
+                </button>
+              ))}
+            </div>
+            
+            {/* Subject Pills - Show when year is expanded */}
+            {expandedYear && groupedByYear[expandedYear] && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {groupedByYear[expandedYear].map(subject => (
                   <button
-                    onClick={() => handleYearClick(year.value)}
-                    className={`px-6 py-3 font-bold rounded-full transition-colors ${
-                      expandedYear === year.value
-                        ? 'bg-red-700 text-white border-2 border-white'
+                    key={`${expandedYear}-${subject}`}
+                    onClick={() => handleSubjectClick(expandedYear, subject)}
+                    className={`px-4 py-2 font-semibold rounded-full transition-colors ${
+                      filters.subject === subject && filters.academicYear === expandedYear
+                        ? 'bg-red-700 text-white border-2 border-white shadow-[0_0_0_2px_white,0_0_0_4px_red]'
                         : 'bg-white text-red-700 border-2 border-red-700 hover:bg-red-50'
                     }`}
                   >
-                    {year.label}
+                    {getSubjectLabel(subject)}
                   </button>
-                  
-                  {/* Subject Pills - Show when year is expanded */}
-                  {expandedYear === year.value && groupedByYear[year.value] && (
-                    <div className="flex flex-wrap gap-2 mt-3 ml-4">
-                      {groupedByYear[year.value].map(subject => (
-                        <button
-                          key={`${year.value}-${subject}`}
-                          onClick={() => handleSubjectClick(year.value, subject)}
-                          className={`px-4 py-2 font-semibold rounded-full transition-colors ${
-                            filters.subject === subject && filters.academicYear === year.value
-                              ? 'bg-red-700 text-white border-2 border-white'
-                              : 'bg-white text-red-700 border-2 border-red-700 hover:bg-red-50'
-                          }`}
-                        >
-                          {getSubjectLabel(subject)}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Results Count */}
@@ -180,7 +179,7 @@ export default function NotesPage() {
                 
                 return (
                   <div key={year}>
-                    <div className={`${yearColors.bg} border-4 ${yearColors.border} p-4 rounded-lg mb-6 inline-block`}>
+                    <div className="bg-white border-4 border-black p-4 rounded-lg mb-6 inline-block">
                       <h2 className="text-2xl font-bold text-black">{yearLabel}</h2>
                     </div>
                     

@@ -41,6 +41,7 @@ export const noteSchema = {
       name: 'pageNumber',
       title: 'Page Number',
       type: 'number',
+      validation: (Rule: any) => Rule.required().min(1),
     },
     {
       name: 'images',

@@ -267,7 +267,9 @@ export default function NotePage() {
               {/* Pages Info - Prominent Display */}
               <div className="mb-6 inline-block">
                 <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
-                  <span className="text-lg font-semibold text-black">Pages: 45</span>
+                  <span className="text-lg font-semibold text-black">
+                    Pages: {note.pageNumber || 'N/A'}
+                  </span>
                 </div>
               </div>
 
