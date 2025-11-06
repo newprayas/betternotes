@@ -34,8 +34,8 @@ const CartBottomBar = () => {
     >
       <div className="container flex justify-center py-4">
         <div className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-full shadow-lg text-center">
-          <p className="text-sm md:text-base">
-            🎉 Please add ALL the Notes you want 🎉
+          <p className="text-xs md:text-sm">
+            🎉 Please add ALL the Notes you want to Cart 🎉
           </p>
         </div>
       </div>

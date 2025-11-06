@@ -16,6 +16,7 @@ import {
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { useCart } from '@/lib/cart-context';
+import { useScroll } from '@/lib/scroll-context';
 import { Note } from '@/types';
 import { getNoteBySlug } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
@@ -29,6 +30,7 @@ export default function NotePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const { addToCart, removeFromCart, cart } = useCart();
+  const { saveScrollPosition } = useScroll();
 
   // Fetch the note data based on the slug
   useEffect(() => {
@@ -144,7 +146,11 @@ export default function NotePage() {
         <div className="container py-8">
           {/* Breadcrumb */}
           <div className="mb-6">
-            <Link href="/notes" className="flex items-center text-gray-600 hover:text-black transition-colors">
+            <Link
+              href="/notes"
+              scroll={false}
+              className="flex items-center text-gray-600 hover:text-black transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Notes
             </Link>

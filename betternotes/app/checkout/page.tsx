@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import PromotionalOffers from '@/components/checkout/promotional-offers';
 import { useCart } from '@/lib/cart-context';
 import { validateDiscountCode } from '@/lib/sanity/api';
 
@@ -68,7 +69,7 @@ export default function CheckoutPage() {
     setTimeout(() => setCopiedToClipboard(false), 2000);
   };
 
-  const telegramUsername = '@betternotes';
+  const telegramUsername = '@prayas_ojha';
   const orderMessage = `Hi! I'd like to purchase the following notes:\n\n${cart.items.map(item => `${item.note.title} (x${item.quantity}) - ₹${item.note.price * item.quantity}`).join('\n')}\n\nTotal: ₹${cart.finalTotal}`;
 
   if (orderPlaced) {
@@ -98,28 +99,10 @@ export default function CheckoutPage() {
                 </ol>
               </div>
               
-              <div className="bg-gray-100 rounded-lg p-4 mb-6">
-                <p className="font-semibold mb-2">Telegram Contact:</p>
-                <div className="flex items-center justify-center">
-                  <Send className="w-5 h-5 mr-2 text-blue-500" />
-                  <span className="text-lg">{telegramUsername}</span>
-                  <button
-                    onClick={() => copyToClipboard(telegramUsername)}
-                    className="ml-2 p-1 rounded hover:bg-gray-200 transition-colors"
-                    title="Copy to clipboard"
-                  >
-                    {copiedToClipboard ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-600" />
-                    )}
-                  </button>
-                </div>
-              </div>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href={`https://t.me/${telegramUsername.replace('@', '')}`}
+                  href="https://t.me/prayas_ojha"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary"
@@ -170,10 +153,12 @@ export default function CheckoutPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Cart Items */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-sm p-6">
+            <div>
+              <PromotionalOffers />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Cart Items */}
+                <div className="lg:col-span-2">
+                <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-black">
                   <h1 className="text-xl font-bold text-black mb-6">Shopping Cart</h1>
                   
                   <div className="space-y-4">
@@ -199,7 +184,7 @@ export default function CheckoutPage() {
 
               {/* Order Summary */}
               <div>
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
+                <div className="bg-white rounded-lg shadow-lg p-6 mb-4 border-2 border-black">
                   <h2 className="text-xl font-bold text-black mb-6">Order Summary</h2>
                   
                   <div className="space-y-2 mb-6">
@@ -211,6 +196,17 @@ export default function CheckoutPage() {
                     ))}
                     
                     <div className="border-t border-gray-200 pt-2 mt-2">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-600">Price Before Discount</span>
+                        <span className="font-medium">৳{cart.total}</span>
+                      </div>
+                      
+                      {cart.quantityDiscount && cart.quantityDiscount > 0 && (
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-gray-600">Quantity Discount</span>
+                          <span className="font-medium text-green-600">-৳{cart.quantityDiscount}</span>
+                        </div>
+                      )}
                       {cart.discountCode && (
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-gray-600">Discount ({cart.discountCode})</span>
@@ -225,44 +221,10 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  {/* Discount Code */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Discount Code
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={discountCodeInput}
-                        onChange={(e) => setDiscountCodeInput(e.target.value)}
-                        placeholder="Enter code"
-                        className="flex-grow px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                      />
-                      {cart.discountCode ? (
-                        <button
-                          onClick={handleRemoveDiscountCode}
-                          className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-full hover:bg-red-100 transition-colors"
-                        >
-                          Remove
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleApplyDiscountCode}
-                          disabled={isApplyingDiscount || !discountCodeInput.trim()}
-                          className="px-4 py-2 bg-gray-100 text-gray-700 border border-gray-300 rounded-full hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {isApplyingDiscount ? 'Applying...' : 'Apply'}
-                        </button>
-                      )}
-                    </div>
-                    {discountError && (
-                      <p className="mt-1 text-sm text-red-600">{discountError}</p>
-                    )}
-                  </div>
 
                   <button
                     onClick={handlePlaceOrder}
-                    className="w-full btn-primary text-lg py-3"
+                    className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors text-center"
                   >
                     Place Order
                   </button>
@@ -281,6 +243,7 @@ export default function CheckoutPage() {
                     <li>3. Share your order details and complete payment</li>
                     <li>4. Receive your notes instantly</li>
                   </ol>
+                </div>
                 </div>
               </div>
             </div>

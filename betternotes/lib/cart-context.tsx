@@ -12,6 +12,7 @@ interface CartContextType {
   applyDiscountCode: (code: string, discountPercentage: number) => void;
   removeDiscountCode: () => void;
   itemCount: number;
+  quantityDiscount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -42,14 +43,25 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       }
       
       const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
-      const discountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
-      const finalTotal = total - discountAmount;
+      const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // Calculate quantity-based discount
+      let quantityDiscount = 0;
+      if (itemCount >= 10) quantityDiscount = 200;
+      else if (itemCount >= 8) quantityDiscount = 150;
+      else if (itemCount >= 5) quantityDiscount = 100;
+      else if (itemCount >= 3) quantityDiscount = 50;
+      
+      const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
+      const totalDiscount = quantityDiscount + codeDiscountAmount;
+      const finalTotal = total - totalDiscount;
       
       return {
         ...state,
         items: newItems,
         total,
-        discountAmount,
+        discountAmount: codeDiscountAmount,
+        quantityDiscount,
         finalTotal,
       };
     }
@@ -57,14 +69,25 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
     case 'REMOVE_FROM_CART': {
       const newItems = state.items.filter(item => item.note._id !== action.payload);
       const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
-      const discountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
-      const finalTotal = total - discountAmount;
+      const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // Calculate quantity-based discount
+      let quantityDiscount = 0;
+      if (itemCount >= 10) quantityDiscount = 200;
+      else if (itemCount >= 8) quantityDiscount = 150;
+      else if (itemCount >= 5) quantityDiscount = 100;
+      else if (itemCount >= 3) quantityDiscount = 50;
+      
+      const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
+      const totalDiscount = quantityDiscount + codeDiscountAmount;
+      const finalTotal = total - totalDiscount;
       
       return {
         ...state,
         items: newItems,
         total,
-        discountAmount,
+        discountAmount: codeDiscountAmount,
+        quantityDiscount,
         finalTotal,
       };
     }
@@ -80,14 +103,25 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       );
       
       const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
-      const discountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
-      const finalTotal = total - discountAmount;
+      const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // Calculate quantity-based discount
+      let quantityDiscount = 0;
+      if (itemCount >= 10) quantityDiscount = 200;
+      else if (itemCount >= 8) quantityDiscount = 150;
+      else if (itemCount >= 5) quantityDiscount = 100;
+      else if (itemCount >= 3) quantityDiscount = 50;
+      
+      const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
+      const totalDiscount = quantityDiscount + codeDiscountAmount;
+      const finalTotal = total - totalDiscount;
       
       return {
         ...state,
         items: newItems,
         total,
-        discountAmount,
+        discountAmount: codeDiscountAmount,
+        quantityDiscount,
         finalTotal,
       };
     }
@@ -97,27 +131,32 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
         items: [],
         total: 0,
         finalTotal: 0,
+        quantityDiscount: 0,
       };
     
     case 'APPLY_DISCOUNT_CODE': {
       const { code, discountPercentage } = action.payload;
-      const discountAmount = state.total * (discountPercentage / 100);
-      const finalTotal = state.total - discountAmount;
+      const codeDiscountAmount = state.total * (discountPercentage / 100);
+      const totalDiscount = codeDiscountAmount + (state.quantityDiscount || 0);
+      const finalTotal = state.total - totalDiscount;
       
       return {
         ...state,
         discountCode: code,
-        discountAmount,
+        discountAmount: codeDiscountAmount,
         finalTotal,
       };
     }
     
     case 'REMOVE_DISCOUNT_CODE': {
+      const totalDiscount = state.quantityDiscount || 0;
+      const finalTotal = state.total - totalDiscount;
+      
       return {
         ...state,
         discountCode: undefined,
         discountAmount: undefined,
-        finalTotal: state.total,
+        finalTotal,
       };
     }
     
@@ -193,6 +232,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         applyDiscountCode,
         removeDiscountCode,
         itemCount,
+        quantityDiscount: cart.quantityDiscount || 0,
       }}
     >
       {children}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
+import { ScrollProvider } from "@/lib/scroll-context";
 import CartBottomBar from "@/components/layout/cart-bottom-bar";
 
 const geistSans = Geist({
@@ -37,8 +38,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          {children}
-          <CartBottomBar />
+          <ScrollProvider>
+            {children}
+            <CartBottomBar />
+          </ScrollProvider>
         </CartProvider>
       </body>
     </html>

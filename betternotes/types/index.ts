@@ -48,6 +48,7 @@ export interface Cart {
   total: number;
   discountCode?: string;
   discountAmount?: number;
+  quantityDiscount?: number;
   finalTotal: number;
 }
 

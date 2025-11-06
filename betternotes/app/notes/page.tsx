@@ -11,6 +11,7 @@ import { Note, NoteFilters } from '@/types';
 import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
 import { useCart } from '@/lib/cart-context';
+import { useScroll } from '@/lib/scroll-context';
 
 const academicYears = [
   { value: 'third-year', label: 'Third Year' },
@@ -44,6 +45,7 @@ export default function NotesPage() {
   const [expandedYear, setExpandedYear] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart, removeFromCart, cart } = useCart();
+  const { saveScrollPosition, restoreScrollPosition } = useScroll();
 
   // Fetch data from Sanity when the component mounts
   useEffect(() => {
@@ -64,6 +66,82 @@ export default function NotesPage() {
     }
     fetchData();
   }, []);
+
+  // Save scroll position when leaving the page
+  useEffect(() => {
+    const handleScroll = () => {
+      saveScrollPosition('notes-page', {
+        x: window.scrollX,
+        y: window.scrollY
+      });
+    };
+
+    // Save scroll position before unmounting (when navigating away)
+    const handleBeforeUnload = () => {
+      saveScrollPosition('notes-page', {
+        x: window.scrollX,
+        y: window.scrollY
+      });
+    };
+
+    // Save position when page is hidden (when navigating to another page)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveScrollPosition('notes-page', {
+          x: window.scrollX,
+          y: window.scrollY
+        });
+      }
+    };
+
+    // Add scroll event listener to save position continuously
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Save position when user is about to leave the page
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Save position when page is hidden (navigation)
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [saveScrollPosition]);
+
+  // Restore scroll position after content is loaded
+  useEffect(() => {
+    if (!isLoading) {
+      // Use multiple attempts to ensure scroll position is restored
+      const restoreScroll = () => {
+        const savedPosition = restoreScrollPosition('notes-page');
+        if (savedPosition) {
+          console.log('Restoring scroll position:', savedPosition);
+          window.scrollTo(savedPosition.x, savedPosition.y);
+          
+          // Verify the scroll position was applied
+          setTimeout(() => {
+            if (window.scrollY !== savedPosition.y) {
+              console.log('Scroll position not applied, trying again');
+              window.scrollTo(savedPosition.x, savedPosition.y);
+            }
+          }, 50);
+        }
+      };
+
+      // First attempt after a short delay
+      const timeoutId1 = setTimeout(restoreScroll, 100);
+      
+      // Second attempt after a longer delay to ensure content is fully rendered
+      const timeoutId2 = setTimeout(restoreScroll, 300);
+
+      return () => {
+        clearTimeout(timeoutId1);
+        clearTimeout(timeoutId2);
+      };
+    }
+  }, [isLoading, restoreScrollPosition]);
 
   useEffect(() => {
     // Don't apply filters - show all notes always

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { X } from 'lucide-react';
 import { Note } from '@/types';
 import { useCart } from '@/lib/cart-context';
+import { useScroll } from '@/lib/scroll-context';
 import { getSubjectLabel } from '@/lib/sanity/api';
 
 interface DynamicNotesSectionProps {
@@ -14,6 +15,7 @@ interface DynamicNotesSectionProps {
 
 export default function DynamicNotesSection({ notes, academicYear, subject }: DynamicNotesSectionProps) {
   const { addToCart, removeFromCart, cart } = useCart();
+  const { saveScrollPosition } = useScroll();
   const subjectLabel = getSubjectLabel(subject);
 
   // Filter notes for this specific year and subject
@@ -25,7 +27,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
 
   return (
     <div id={`${academicYear}-${subject}`} className="mb-8 scroll-mt-24">
-      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-400 p-3 rounded-lg mb-4 inline-block">
+      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-4 border-yellow-400 p-3 rounded-lg mb-4 inline-block">
         <h3 className="text-lg font-bold text-gray-800">{subjectLabel}</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -50,8 +52,18 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
             </div>
             
             <div className="flex gap-2">
-              <Link href={`/notes/${note.slug}`} className="bg-white border-2 border-red-600 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-red-50 transition-colors text-sm">
-                See Samples
+              <Link
+                href={`/notes/${note.slug}`}
+                className="bg-white border-2 border-red-600 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-red-50 transition-colors text-sm"
+                onClick={() => {
+                  // Save current scroll position when clicking "See Sample"
+                  saveScrollPosition('notes-page', {
+                    x: window.scrollX,
+                    y: window.scrollY
+                  });
+                }}
+              >
+                See Sample
               </Link>
               <button
                 onClick={() => {
