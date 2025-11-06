@@ -62,6 +62,9 @@ export const noteSchema = {
           ],
         },
       ],
+      options: {
+        layout: 'grid',
+      },
       validation: (Rule: any) => Rule.required().min(1),
     },
     {
