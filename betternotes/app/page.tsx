@@ -38,7 +38,7 @@ export default async function Home() {
                 <div className="mb-8">
                   <div className="w-48 h-64 mx-auto overflow-hidden mb-4 rounded-full">
                     <Image
-                      src="/Asset/autho.jpeg"
+                      src="/autho.jpeg"
                       alt="Prayas Raj Ojha"
                       width={192}
                       height={256}
@@ -50,12 +50,12 @@ export default async function Home() {
                 
                 <div className="mb-8">
                   <div className="space-y-2">
-                    <p className="text-lg font-bold">Honours in Anatomy</p>
-                    <p className="text-lg font-bold">Honours in Community Medicine</p>
-                    <p className="text-lg font-bold">Honours in Microbiology</p>
-                    <p className="text-lg font-bold">Honours in Pharmacology</p>
-                    <p className="text-lg font-bold">Rank 1 in CMC - 2nd PROF</p>
-                    <p className="text-lg font-bold">Rank 7 in CMC - FINAL PROF</p>
+                    <p className="text-lg font-bold">🎉 Honours in Anatomy </p>
+                    <p className="text-lg font-bold">🎉 Honours in Community Medicine </p>
+                    <p className="text-lg font-bold">🎉 Honours in Microbiology </p>
+                    <p className="text-lg font-bold">🎉 Honours in Pharmacology </p>
+                    <p className="text-lg font-bold">⭐ Rank 1 in CMC - 2nd PROF </p>
+                    <p className="text-lg font-bold">⭐ Rank 7 in CMC - FINAL PROF </p>
                   </div>
                 </div>
                 
