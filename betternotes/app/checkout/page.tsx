@@ -27,6 +27,11 @@ export default function CheckoutPage() {
   const [discountError, setDiscountError] = useState('');
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
+  
+  // New state for validation steps
+  const [gmailAddress, setGmailAddress] = useState('');
+  const [emailConfirmed, setEmailConfirmed] = useState(false);
+  const [screenshotConfirmed, setScreenshotConfirmed] = useState(false);
 
   const handleApplyDiscountCode = async () => {
     if (!discountCodeInput.trim()) return;
@@ -92,11 +97,24 @@ export default function CheckoutPage() {
               
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
                 <h2 className="text-lg font-semibold mb-4">Next Steps:</h2>
-                <ol className="text-left space-y-2">
-                  <li>1. Contact us on Telegram with your order details</li>
-                  <li>2. Complete the payment through your preferred method</li>
-                  <li>3. Receive your notes via Telegram or email</li>
-                </ol>
+                <div className="text-left space-y-3">
+                  <div className="flex items-center">
+                    <span className="text-lg mr-2">🎉</span>
+                    <span>Contact us on Telegram with your order details</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-lg mr-2">✅</span>
+                    <span className="font-bold text-blue-600">Please SEND the screenshot you took via telegram</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-lg mr-2">🎉</span>
+                    <span>Receive your notes in your Google Docs - link will be sent to telegram.</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-lg mr-2">🎉</span>
+                    <span>Make payment ONLY AFTER you have received your notes ❤️</span>
+                  </div>
+                </div>
               </div>
               
               
@@ -105,12 +123,12 @@ export default function CheckoutPage() {
                   href="https://t.me/prayas_ojha"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary"
+                  className="inline-flex items-center px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors"
                 >
                   <Send className="w-5 h-5 mr-2" />
                   Contact on Telegram
                 </a>
-                <Link href="/" className="btn-outline-light">
+                <Link href="/" className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition-colors">
                   Continue Shopping
                 </Link>
               </div>
@@ -130,7 +148,7 @@ export default function CheckoutPage() {
       <main className="flex-grow bg-gray-50 py-8">
         <div className="container">
           <div className="mb-6">
-            <Link href="/notes" className="flex items-center text-gray-600 hover:text-black transition-colors">
+            <Link href="/notes" className="flex items-center text-gray-600 hover:text-black transition-colors font-bold">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Continue Shopping
             </Link>
@@ -222,9 +240,72 @@ export default function CheckoutPage() {
                   </div>
 
 
+                  {/* Gmail Input Field */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Please add your gmail address that you use on your phone ❤️
+                    </label>
+                    <input
+                      type="email"
+                      value={gmailAddress}
+                      onChange={(e) => setGmailAddress(e.target.value)}
+                      placeholder="your.gmail@gmail.com"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    />
+                  </div>
+
+                  {/* Email Confirmation Checkbox */}
+                  {gmailAddress && (
+                    <div className="mb-4">
+                      <label className="flex items-start space-x-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={emailConfirmed}
+                          onChange={(e) => setEmailConfirmed(e.target.checked)}
+                          className="mt-1 w-5 h-5 text-yellow-400 border-gray-300 rounded focus:ring-yellow-400"
+                        />
+                        <div>
+                          <span className="text-sm font-medium text-gray-700">
+                            Please recheck your email 🎉 - Your notes will be sent to this gmail - ensure it is correct.
+                          </span>
+                          <p className="text-xs text-red-600 font-medium mt-1">
+                            I HAVE RE-CHECKED MY EMAIL and IT IS CORRECT
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+
+                  {/* Screenshot Confirmation Checkbox */}
+                  {emailConfirmed && (
+                    <div className="mb-4">
+                      <label className="flex items-start space-x-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={screenshotConfirmed}
+                          onChange={(e) => setScreenshotConfirmed(e.target.checked)}
+                          className="mt-1 w-5 h-5 text-yellow-400 border-gray-300 rounded focus:ring-yellow-400"
+                        />
+                        <div>
+                          <span className="text-sm font-medium text-gray-700">
+                            Please take a screenshot of the order summary (the total amount) 🎉 - We need it to send you the notes.
+                          </span>
+                          <p className="text-xs text-red-600 font-medium mt-1">
+                            YES I HAVE TAKEN THE SCREENSHOT
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+
                   <button
                     onClick={handlePlaceOrder}
-                    className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors text-center"
+                    disabled={!gmailAddress || !emailConfirmed || !screenshotConfirmed}
+                    className={`w-full px-6 py-3 rounded-lg font-bold transition-colors text-center ${
+                      gmailAddress && emailConfirmed && screenshotConfirmed
+                        ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                   >
                     Place Order
                   </button>

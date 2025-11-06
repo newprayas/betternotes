@@ -47,10 +47,10 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       
       // Calculate quantity-based discount
       let quantityDiscount = 0;
-      if (itemCount >= 10) quantityDiscount = 200;
-      else if (itemCount >= 8) quantityDiscount = 150;
-      else if (itemCount >= 5) quantityDiscount = 100;
-      else if (itemCount >= 3) quantityDiscount = 50;
+      if (itemCount >= 8) quantityDiscount = 250;
+      else if (itemCount >= 6) quantityDiscount = 200;
+      else if (itemCount >= 4) quantityDiscount = 150;
+      else if (itemCount >= 2) quantityDiscount = 50;
       
       const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
       const totalDiscount = quantityDiscount + codeDiscountAmount;
@@ -73,10 +73,10 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       
       // Calculate quantity-based discount
       let quantityDiscount = 0;
-      if (itemCount >= 10) quantityDiscount = 200;
-      else if (itemCount >= 8) quantityDiscount = 150;
-      else if (itemCount >= 5) quantityDiscount = 100;
-      else if (itemCount >= 3) quantityDiscount = 50;
+      if (itemCount >= 8) quantityDiscount = 250;
+      else if (itemCount >= 6) quantityDiscount = 200;
+      else if (itemCount >= 4) quantityDiscount = 150;
+      else if (itemCount >= 2) quantityDiscount = 50;
       
       const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
       const totalDiscount = quantityDiscount + codeDiscountAmount;
@@ -107,10 +107,10 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       
       // Calculate quantity-based discount
       let quantityDiscount = 0;
-      if (itemCount >= 10) quantityDiscount = 200;
-      else if (itemCount >= 8) quantityDiscount = 150;
-      else if (itemCount >= 5) quantityDiscount = 100;
-      else if (itemCount >= 3) quantityDiscount = 50;
+      if (itemCount >= 8) quantityDiscount = 250;
+      else if (itemCount >= 6) quantityDiscount = 200;
+      else if (itemCount >= 4) quantityDiscount = 150;
+      else if (itemCount >= 2) quantityDiscount = 50;
       
       const codeDiscountAmount = state.discountCode ? (total * (state.discountAmount! / 100)) : 0;
       const totalDiscount = quantityDiscount + codeDiscountAmount;

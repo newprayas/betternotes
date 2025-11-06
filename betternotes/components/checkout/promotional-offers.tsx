@@ -7,10 +7,10 @@ const PromotionalOffers = () => {
 
   // Define discount tiers
   const discountTiers = [
-    { minItems: 3, discount: 50 },
-    { minItems: 5, discount: 100 },
-    { minItems: 8, discount: 150 },
-    { minItems: 10, discount: 200 }
+    { minItems: 2, discount: 50 },
+    { minItems: 4, discount: 150 },
+    { minItems: 6, discount: 200 },
+    { minItems: 8, discount: 250 }
   ];
 
   // Determine which message to show based on cart count
@@ -20,64 +20,53 @@ const PromotionalOffers = () => {
     if (itemCount === 1) {
       return {
         message: "You are so close to a discount!",
-        subMessage: "Add 2 more notes and Get 50 tk discount!",
-        nextTier: 3,
-        needed: 2
-      };
-    }
-    
-    if (itemCount === 2) {
-      return {
-        message: "You are so close to a discount!",
         subMessage: "Add 1 more note and Get 50 tk discount!",
-        nextTier: 3,
+        nextTier: 2,
         needed: 1
       };
     }
     
-    if (itemCount === 3 || itemCount === 4) {
+    if (itemCount === 2 || itemCount === 3) {
       return {
         message: "Great choice!",
-        subMessage: `You've unlocked a discount by buying ${itemCount} Notes!${itemCount === 3
-          ? " 💯 Add 2 more notes = 5 notes and Get 100 tk discount!"
-          : " 💯 Add 1 more note = 5 notes and Get 100 tk discount!"}`,
-        nextTier: 5,
-        needed: itemCount === 3 ? 2 : 1,
+        subMessage: `You've unlocked a discount by buying ${itemCount} Notes!${itemCount === 2
+          ? " 💯 Add 2 more notes = 4 notes and Get 150 tk discount!"
+          : " 💯 Add 1 more note = 4 notes and Get 150 tk discount!"}`,
+        nextTier: 4,
+        needed: itemCount === 2 ? 2 : 1,
         currentDiscount: 50
       };
     }
     
-    if (itemCount === 5 || itemCount === 6 || itemCount === 7) {
+    if (itemCount === 4 || itemCount === 5) {
       return {
         message: "Awesome!",
-        subMessage: `You've unlocked a bigger discount by buying ${itemCount} Notes!${itemCount === 5
-          ? " 💯 Add 3 more notes = 8 notes and Get 150 tk discount!"
-          : itemCount === 6
-            ? " 💯 Add 2 more notes = 8 notes and Get 150 tk discount!"
-            : " 💯 Add 1 more note = 8 notes and Get 150 tk discount!"}`,
-        nextTier: 8,
-        needed: itemCount === 5 ? 3 : itemCount === 6 ? 2 : 1,
-        currentDiscount: 100
-      };
-    }
-    
-    if (itemCount === 8 || itemCount === 9) {
-      return {
-        message: "Fantastic!",
-        subMessage: `You've unlocked an amazing discount by buying ${itemCount} Notes!${itemCount === 8
-          ? " 💯 Add 2 more notes = 10 notes and Get 200 tk discount!"
-          : " 💯 Add 1 more note = 10 notes and Get 200 tk discount!"}`,
-        nextTier: 10,
-        needed: itemCount === 8 ? 2 : 1,
+        subMessage: `You've unlocked a bigger discount by buying ${itemCount} Notes!${itemCount === 4
+          ? " 💯 Add 2 more notes = 6 notes and Get 200 tk discount!"
+          : " 💯 Add 1 more note = 6 notes and Get 200 tk discount!"}`,
+        nextTier: 6,
+        needed: itemCount === 4 ? 2 : 1,
         currentDiscount: 150
       };
     }
     
-    if (itemCount >= 10) {
+    if (itemCount === 6 || itemCount === 7) {
+      return {
+        message: "Fantastic!",
+        subMessage: `You've unlocked an amazing discount by buying ${itemCount} Notes!${itemCount === 6
+          ? " 💯 Add 2 more notes = 8 notes and Get 250 tk discount!"
+          : " 💯 Add 1 more note = 8 notes and Get 250 tk discount!"}`,
+        nextTier: 8,
+        needed: itemCount === 6 ? 2 : 1,
+        currentDiscount: 200
+      };
+    }
+    
+    if (itemCount >= 8) {
       return {
         message: "Incredible!",
-        subMessage: `You've unlocked our maximum discount by buying ${itemCount} Notes! You're getting 200 tk off your order!`,
-        currentDiscount: 200
+        subMessage: `You've unlocked our maximum discount by buying ${itemCount} Notes! You're getting 250 tk off your order!`,
+        currentDiscount: 250
       };
     }
     
