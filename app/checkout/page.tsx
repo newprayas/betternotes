@@ -268,12 +268,12 @@ export default function CheckoutPage() {
                         value={discountCodeInput}
                         onChange={(e) => setDiscountCodeInput(e.target.value)}
                         placeholder="Enter code"
-                        className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="flex-grow px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       />
                       {cart.discountCode ? (
                         <button
                           onClick={handleRemoveDiscountCode}
-                          className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+                          className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-full hover:bg-red-100 transition-colors"
                         >
                           Remove
                         </button>
@@ -281,7 +281,7 @@ export default function CheckoutPage() {
                         <button
                           onClick={handleApplyDiscountCode}
                           disabled={isApplyingDiscount || !discountCodeInput.trim()}
-                          className="px-4 py-2 bg-gray-100 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2 bg-gray-100 text-gray-700 border border-gray-300 rounded-full hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isApplyingDiscount ? 'Applying...' : 'Apply'}
                         </button>

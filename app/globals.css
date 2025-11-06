@@ -36,19 +36,19 @@ body {
 
 /* Custom utility classes for the project */
 .btn-primary {
-  @apply bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors;
+  @apply bg-black text-white px-6 py-3 rounded-full font-medium hover:bg-gray-800 transition-colors;
 }
 
 .btn-accent {
-  @apply bg-yellow-400 text-black px-4 py-2 rounded-md font-medium hover:bg-yellow-500 transition-colors;
+  @apply bg-yellow-400 text-black px-6 py-3 rounded-full font-medium hover:bg-yellow-500 transition-colors;
 }
 
 .btn-outline {
-  @apply border border-gray-800 text-gray-800 bg-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 hover:text-white transition-colors;
+  @apply border border-gray-800 text-gray-800 bg-white px-6 py-3 rounded-full font-medium hover:bg-gray-800 hover:text-white transition-colors;
 }
 
 .btn-outline-light {
-  @apply border border-gray-600 text-gray-700 bg-white px-4 py-2 rounded-md font-medium hover:bg-gray-700 hover:text-white transition-colors;
+  @apply border border-gray-600 text-gray-700 bg-white px-6 py-3 rounded-full font-medium hover:bg-gray-700 hover:text-white transition-colors;
 }
 
 .container {

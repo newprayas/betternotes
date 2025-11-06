@@ -27,7 +27,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">@</span>
             </div>
-            <span className="font-bold text-xl">Better Notes V2</span>
+            <span className="font-bold text-xl">Better Notes</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -77,7 +77,7 @@ const Header = () => {
             </Link>
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -134,7 +134,7 @@ const Header = () => {
               <input
                 type="text"
                 placeholder="Search for notes..."
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 autoFocus
               />
               <button

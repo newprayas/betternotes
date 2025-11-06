@@ -206,7 +206,7 @@ export default function NotePage() {
                         <button
                           key={index}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
+                          className={`flex-shrink-0 w-20 h-20 rounded-full overflow-hidden border-2 transition-all ${
                             index === currentImageIndex ? 'border-yellow-400' : 'border-gray-200'
                           }`}
                         >
@@ -331,7 +331,7 @@ export default function NotePage() {
                   <button
                     onClick={handleAddToCart}
                     disabled={isAddedToCart}
-                    className={`flex-1 flex items-center justify-center px-6 py-3 rounded-md font-medium transition-colors ${
+                    className={`flex-1 flex items-center justify-center px-6 py-3 rounded-full font-medium transition-colors ${
                       isAddedToCart
                         ? 'bg-green-500 text-white'
                         : 'bg-black text-white hover:bg-gray-800'
@@ -352,7 +352,7 @@ export default function NotePage() {
                   
                   <button
                     onClick={() => setIsLiked(!isLiked)}
-                    className={`px-4 py-3 rounded-md border transition-colors ${
+                    className={`px-4 py-3 rounded-full border transition-colors ${
                       isLiked
                         ? 'bg-red-50 border-red-300 text-red-600'
                         : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -363,7 +363,7 @@ export default function NotePage() {
                   
                   <button
                     onClick={handleShare}
-                    className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
                   >
                     <Share2 className="w-5 h-5" />
                   </button>

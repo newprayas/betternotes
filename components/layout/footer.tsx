@@ -12,7 +12,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
                 <span className="text-black font-bold text-sm">@</span>
               </div>
-              <span className="font-bold text-xl">Better Notes V2</span>
+              <span className="font-bold text-xl">Better Notes</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               High-quality, handwritten medical notes for MBBS students. Created by a dedicated medical student to help you excel in your studies.
@@ -110,7 +110,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Better Notes V2. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Better Notes. All rights reserved.</p>
           <p className="mt-2 text-sm">
             Made with ❤️ for medical students
           </p>

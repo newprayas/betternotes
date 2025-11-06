@@ -123,14 +123,14 @@ export default function NotesPage() {
                   placeholder="Search notes by title, subject, or tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 />
               </div>
 
               {/* Filter Toggle Button */}
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
               >
                 <Filter className="w-5 h-5 mr-2" />
                 Filters
@@ -164,7 +164,7 @@ export default function NotesPage() {
                     <select
                       value={filters.academicYear || ''}
                       onChange={(e) => handleFilterChange('academicYear', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     >
                       <option value="">All Years</option>
                       {academicYears.map(year => (
@@ -183,7 +183,7 @@ export default function NotesPage() {
                     <select
                       value={filters.subject || ''}
                       onChange={(e) => handleFilterChange('subject', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     >
                       <option value="">All Subjects</option>
                       {subjects.map(subject => (

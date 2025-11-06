@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Better Notes V2 - Quick Development Setup Script
+# Better Notes - Quick Development Setup Script
 # This script sets up your development environment automatically
 
-echo "🚀 Setting up Better Notes V2 Development Environment..."
+echo "🚀 Setting up Better Notes Development Environment..."
 echo "=================================================="
 
 # Check if we're in the right directory

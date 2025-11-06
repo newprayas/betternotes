@@ -14,12 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "@Better Notes V2 - Premium Medical Notes",
+  title: "@Better Notes - Premium Medical Notes",
   description: "High-quality medical notes for MBBS students. Handwritten notes by a dedicated medical student covering all subjects and academic years.",
   keywords: "medical notes, MBBS, medical student, handwritten notes, medical education",
   authors: [{ name: "Medical Student" }],
   openGraph: {
-    title: "@Better Notes V2 - Premium Medical Notes",
+    title: "@Better Notes - Premium Medical Notes",
     description: "High-quality medical notes for MBBS students",
     type: "website",
   },

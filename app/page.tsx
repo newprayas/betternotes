@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Star, BookOpen, Users, Award } from 'lucide-react';
+import { Star, BookOpen, Users, Award } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { getFeaturedNotes } from '@/lib/sanity/api';
@@ -28,7 +28,6 @@ export default async function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/notes" className="btn-primary text-lg px-6 py-3">
                   Browse All Notes
-                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
                 <Link href="#featured" className="btn-outline-light text-lg px-6 py-3">
                   View Featured
@@ -144,7 +143,6 @@ export default async function Home() {
             <div className="text-center mt-8">
               <Link href="/notes" className="btn-outline-light">
                 View All Notes
-                <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -155,26 +153,56 @@ export default async function Home() {
           <div className="container">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">About @Better Notes V2</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">About @Better Notes</h2>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                    <BookOpen className="w-24 h-24 text-gray-400" />
+              <div className="text-center">
+                <div className="mb-8">
+                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden mb-4">
+                    <Image
+                      src="/profile-image.jpg"
+                      alt="Prayas Raj Ojha"
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-2">@Prayas Raj Ojha</h3>
+                </div>
+                
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-black mb-4">Achievements</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Honours in Anatomy</p>
+                    </div>
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Honours in Community Medicine</p>
+                    </div>
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Honours in Microbiology</p>
+                    </div>
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Honours in Pharmacology</p>
+                    </div>
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Rank 1 in CMC - 2nd PROF</p>
+                    </div>
+                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium">Rank 7 in CMC - FINAL PROF</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div>
-                  <p className="text-gray-700 mb-4">
-                    Welcome to @Better Notes V2, your trusted source for high-quality medical notes. As a fellow medical student, I understand the challenges of MBBS studies and the importance of having reliable, comprehensive study materials.
-                  </p>
-                  <p className="text-gray-700 mb-4">
-                    All notes are carefully crafted, handwritten, and designed to make complex medical concepts easier to understand. Each set of notes is updated regularly to reflect the latest curriculum and exam patterns.
-                  </p>
-                  <p className="text-gray-700">
-                    Join hundreds of students who have already benefited from these notes and improved their academic performance. Your success is our motivation!
-                  </p>
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-black mb-2">Chittagong Medical College</h4>
+                  <p className="text-gray-600">Creating high-quality medical notes to help fellow students excel in their MBBS journey.</p>
                 </div>
               </div>
             </div>
@@ -190,7 +218,6 @@ export default async function Home() {
             </p>
             <Link href="/notes" className="btn-accent">
               Browse Notes Now
-              <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </div>
         </section>
