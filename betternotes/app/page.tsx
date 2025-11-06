@@ -3,13 +3,9 @@ import Image from 'next/image';
 import { Star, BookOpen, Users, Award } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { getFeaturedNotes } from '@/lib/sanity/api';
-import { Note } from '@/types';
-import { urlFor } from '@/lib/sanity/client';
+import ImageSlideshow from '@/components/ui/image-slideshow';
 
 export default async function Home() {
-  // We now fetch the data live from Sanity instead of using a placeholder!
-  const featuredNotes: Note[] = await getFeaturedNotes();
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -25,12 +21,9 @@ export default async function Home() {
               <p className="text-lg md:text-xl text-gray-700 mb-6 md:mb-8 max-w-2xl mx-auto">
                 High-quality, handwritten notes created by a dedicated medical student to help you excel in your studies and exams.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex justify-center">
                 <Link href="/notes" className="btn-primary text-lg px-6 py-3">
-                  Browse All Notes
-                </Link>
-                <Link href="#featured" className="btn-outline-light text-lg px-6 py-3">
-                  View Featured
+                  SEE ALL NOTES
                 </Link>
               </div>
             </div>
@@ -72,78 +65,11 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Featured Notes Section */}
-        <section id="featured" className="py-12 md:py-16 bg-gray-50">
+        {/* Image Slideshow Section */}
+        <section className="py-12 md:py-16 bg-gray-50">
           <div className="container">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">Featured Notes</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Handpicked selection of our most popular and comprehensive notes
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {featuredNotes.map((note) => (
-                <div key={note._id} className="card p-6 hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
-                    {note.images && note.images.length > 0 && note.images[0]?.asset ? (
-                      <Image
-                        src={urlFor(note.images[0]).url()}
-                        alt={note.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-gray-400" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="mb-2">
-                    <span className="inline-block px-2 py-1 bg-yellow-100 text-black text-xs font-semibold rounded mr-2">
-                      {note.subject.replace('-', ' ')}
-                    </span>
-                    <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">
-                      {note.academicYear.replace('-', ' ')}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold mb-2">{note.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{note.description}</p>
-                  
-                  <div className="flex items-center mb-4">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-500 ml-2">(4.8)</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      {note.originalPrice && (
-                        <span className="text-gray-400 line-through text-sm mr-2">
-                          ₹{note.originalPrice}
-                        </span>
-                      )}
-                      <span className="text-xl font-bold text-black">₹{note.price}</span>
-                    </div>
-                  </div>
-                  
-                  <Link href={`/notes/${note.slug}`} className="btn-primary w-full text-center">
-                    View Details
-                  </Link>
-                </div>
-              ))}
-            </div>
-            
-            <div className="text-center mt-8">
-              <Link href="/notes" className="btn-outline-light">
-                View All Notes
-              </Link>
+            <div className="max-w-4xl mx-auto">
+              <ImageSlideshow />
             </div>
           </div>
         </section>
@@ -152,51 +78,28 @@ export default async function Home() {
         <section id="about" className="py-12 md:py-16 bg-white">
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">About @Better Notes</h2>
-              </div>
-              
               <div className="text-center">
                 <div className="mb-8">
-                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden mb-4">
+                  <div className="w-48 h-64 mx-auto overflow-hidden mb-4 rounded-full">
                     <Image
-                      src="/profile-image.jpg"
+                      src="/Asset/autho.png"
                       alt="Prayas Raj Ojha"
-                      width={128}
-                      height={128}
-                      className="object-cover"
+                      width={192}
+                      height={256}
+                      className="object-cover w-full h-full"
                     />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-2">@Prayas Raj Ojha</h3>
                 </div>
                 
                 <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-black mb-4">Achievements</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Honours in Anatomy</p>
-                    </div>
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Honours in Community Medicine</p>
-                    </div>
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Honours in Microbiology</p>
-                    </div>
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Honours in Pharmacology</p>
-                    </div>
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Rank 1 in CMC - 2nd PROF</p>
-                    </div>
-                    <div className="bg-yellow-100 rounded-lg p-3 text-center">
-                      <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium">Rank 7 in CMC - FINAL PROF</p>
-                    </div>
+                  <div className="space-y-2">
+                    <p className="text-lg font-bold">Honours in Anatomy</p>
+                    <p className="text-lg font-bold">Honours in Community Medicine</p>
+                    <p className="text-lg font-bold">Honours in Microbiology</p>
+                    <p className="text-lg font-bold">Honours in Pharmacology</p>
+                    <p className="text-lg font-bold">Rank 1 in CMC - 2nd PROF</p>
+                    <p className="text-lg font-bold">Rank 7 in CMC - FINAL PROF</p>
                   </div>
                 </div>
                 

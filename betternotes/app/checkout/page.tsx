@@ -179,51 +179,17 @@ export default function CheckoutPage() {
                   <div className="space-y-4">
                     {cart.items.map((item) => (
                       <div key={item.note._id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
-                        <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
-                          <Image
-                            src="/placeholder.svg"
-                            alt={item.note.title}
-                            width={80}
-                            height={80}
-                            className="rounded-lg"
-                          />
-                        </div>
-                        
                         <div className="flex-grow">
                           <h3 className="font-semibold text-black mb-1">{item.note.title}</h3>
-                          <p className="text-sm text-gray-600 mb-2">{item.note.subject.replace('-', ' ')}</p>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <button
-                                onClick={() => updateQuantity(item.note._id, item.quantity - 1)}
-                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                              >
-                                <Minus className="w-4 h-4" />
-                              </button>
-                              
-                              <span className="w-12 text-center">{item.quantity}</span>
-                              
-                              <button
-                                onClick={() => updateQuantity(item.note._id, item.quantity + 1)}
-                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                              >
-                                <Plus className="w-4 h-4" />
-                              </button>
-                            </div>
-                            
-                            <div className="text-right">
-                              <p className="font-semibold">₹{item.note.price * item.quantity}</p>
-                              <p className="text-sm text-gray-500">₹{item.note.price} each</p>
-                            </div>
-                          </div>
+                          <p className="text-sm text-gray-600 mb-1">{item.note.subject.replace('-', ' ')}</p>
+                          <p className="font-medium text-black">৳{item.note.price}</p>
                         </div>
                         
                         <button
                           onClick={() => removeFromCart(item.note._id)}
-                          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                          className="p-2 rounded-full hover:bg-red-50 transition-colors"
                         >
-                          <Trash2 className="w-5 h-5 text-gray-500" />
+                          <Trash2 className="w-5 h-5 text-red-500" />
                         </button>
                       </div>
                     ))}
@@ -236,23 +202,25 @@ export default function CheckoutPage() {
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
                   <h2 className="text-xl font-bold text-black mb-6">Order Summary</h2>
                   
-                  <div className="space-y-3 mb-6">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span className="font-semibold">₹{cart.total}</span>
-                    </div>
-                    
-                    {cart.discountCode && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Discount ({cart.discountCode})</span>
-                        <span className="font-semibold text-green-600">-₹{cart.discountAmount}</span>
+                  <div className="space-y-2 mb-6">
+                    {cart.items.map((item) => (
+                      <div key={item.note._id} className="flex justify-between items-center">
+                        <span className="text-gray-700">{item.note.title}</span>
+                        <span className="font-medium">৳{item.note.price}</span>
                       </div>
-                    )}
+                    ))}
                     
-                    <div className="border-t border-gray-200 pt-3">
-                      <div className="flex justify-between">
-                        <span className="text-lg font-bold">Total</span>
-                        <span className="text-lg font-bold">₹{cart.finalTotal}</span>
+                    <div className="border-t border-gray-200 pt-2 mt-2">
+                      {cart.discountCode && (
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-gray-600">Discount ({cart.discountCode})</span>
+                          <span className="font-medium text-green-600">-৳{cart.discountAmount}</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold">Total</span>
+                        <span className="font-bold">৳{cart.finalTotal}</span>
                       </div>
                     </div>
                   </div>

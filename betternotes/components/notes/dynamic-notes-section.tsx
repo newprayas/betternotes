@@ -35,34 +35,22 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
               <h3 className="text-xl font-bold">{note.title}</h3>
             </div>
             
-            <div className="flex items-center gap-3 mb-4">
-              {note.pageNumber ? (
-                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
-                  <span className="text-sm font-semibold text-black">
-                    Pages: {note.pageNumber}
+            <div className="mb-4">
+              <div className="text-base font-semibold text-black mb-1">
+                {note.pageNumber ? `${note.pageNumber} Pages` : 'N/A Pages'}
+              </div>
+              <div className="text-base font-semibold text-black">
+                {note.originalPrice && (
+                  <span className="text-gray-400 line-through mr-1">
+                    ৳{note.originalPrice}
                   </span>
-                </div>
-              ) : (
-                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
-                  <span className="text-sm font-semibold text-black">
-                    Pages: N/A
-                  </span>
-                </div>
-              )}
-              <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
-                <div className="flex items-center">
-                  {note.originalPrice && (
-                    <span className="text-gray-400 line-through text-sm mr-1">
-                      ৳{note.originalPrice}
-                    </span>
-                  )}
-                  <span className="text-sm font-semibold text-black">Price: ৳{note.price}</span>
-                </div>
+                )}
+                ৳{note.price}
               </div>
             </div>
             
             <div className="flex gap-2">
-              <Link href={`/notes/${note.slug}`} className="bg-black text-white px-3 py-1.5 rounded-lg font-bold text-center hover:bg-gray-800 transition-colors text-sm">
+              <Link href={`/notes/${note.slug}`} className="bg-white border-2 border-red-600 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-red-50 transition-colors text-sm">
                 View Details
               </Link>
               <button

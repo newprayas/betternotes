@@ -261,12 +261,12 @@ export default function NotePage() {
               {/* Description */}
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-2">Description</h2>
-                <p className="text-gray-700 leading-relaxed">{note.description}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{note.description}</p>
               </div>
 
               {/* Pages Info - Prominent Display */}
-              <div className="mb-8 inline-block">
-                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
+              <div className="mb-2">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
                   <span className="text-lg font-semibold text-black">
                     Pages: {note.pageNumber || 'N/A'}
                   </span>
@@ -274,8 +274,8 @@ export default function NotePage() {
               </div>
 
               {/* Price Info - Same styling as Pages */}
-              <div className="mb-6 inline-block">
-                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
+              <div className="mb-6">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
                   <div className="flex items-center">
                     {note.originalPrice && (
                       <span className="text-gray-400 line-through text-lg mr-2">

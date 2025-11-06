@@ -67,6 +67,11 @@ body {
   @apply bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded;
 }
 
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+  line-height: 1.2;
+}
+
 /* Mobile-first responsive utilities */
 @media (min-width: 640px) {
   .container {

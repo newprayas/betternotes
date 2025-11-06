@@ -33,10 +33,12 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
       
       let newItems;
       if (existingItemIndex >= 0) {
+        // If item already exists, don't increase quantity (limit to 1 per note)
         newItems = [...state.items];
-        newItems[existingItemIndex].quantity += quantity;
+        newItems[existingItemIndex].quantity = 1;
       } else {
-        newItems = [...state.items, { note, quantity }];
+        // Add new item with quantity of 1 (regardless of requested quantity)
+        newItems = [...state.items, { note, quantity: 1 }];
       }
       
       const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
