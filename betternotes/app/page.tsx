@@ -86,9 +86,9 @@ export default async function Home() {
               {featuredNotes.map((note) => (
                 <div key={note._id} className="card p-6 hover:shadow-lg transition-shadow">
                   <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
-                    {note.coverImage ? (
+                    {note.images && note.images.length > 0 && note.images[0]?.asset ? (
                       <Image
-                        src={urlFor(note.coverImage).url()}
+                        src={urlFor(note.images[0]).url()}
                         alt={note.title}
                         fill
                         className="object-cover"

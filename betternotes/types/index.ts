@@ -7,12 +7,6 @@ export interface Note {
   price: number;
   originalPrice?: number;
   pageNumber?: number;
-  coverImage: {
-    asset: {
-      _ref: string;
-      _type: string;
-    };
-  };
   images: {
     _key?: string;
     _type: string;

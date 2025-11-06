@@ -37,7 +37,6 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
     price,
     originalPrice,
     pageNumber,
-    coverImage,
     images[]{
       _key,
       _type,
@@ -69,7 +68,6 @@ export async function getFeaturedNotes(): Promise<Note[]> {
     price,
     originalPrice,
     pageNumber,
-    coverImage,
     images[]{
       _key,
       _type,
@@ -101,7 +99,6 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
     price,
     originalPrice,
     pageNumber,
-    coverImage,
     images[]{
       _key,
       _type,
