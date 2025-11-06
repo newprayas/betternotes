@@ -273,23 +273,27 @@ export default function NotePage() {
                 </div>
               </div>
 
-              {/* Price and Actions */}
-              <div className="border-t border-gray-200 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
+              {/* Price Info - Same styling as Pages */}
+              <div className="mb-6 inline-block">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
+                  <div className="flex items-center">
                     {note.originalPrice && (
                       <span className="text-gray-400 line-through text-lg mr-2">
                         ৳{note.originalPrice}
                       </span>
                     )}
-                    <span className="text-4xl font-bold text-black">৳{note.price}</span>
+                    <span className="text-lg font-semibold text-black">৳{note.price}</span>
+                    {note.originalPrice && (
+                      <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
+                        {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF
+                      </span>
+                    )}
                   </div>
-                  {note.originalPrice && (
-                    <span className="px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
-                      {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF
-                    </span>
-                  )}
                 </div>
+              </div>
+
+              {/* Actions */}
+              <div className="mb-6">
 
                 <div className="flex flex-col gap-3">
                   <button

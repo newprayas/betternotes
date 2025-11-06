@@ -44,11 +44,6 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {itemCount > 0 && (
-              <Link href="/checkout" className="bg-yellow-400 text-black px-5 py-2 rounded-lg font-bold text-sm hover:bg-yellow-500 transition-colors">
-                BUY NOTES
-              </Link>
-            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (
@@ -61,11 +56,6 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            {itemCount > 0 && (
-              <Link href="/checkout" className="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-xs hover:bg-yellow-500 transition-colors">
-                BUY NOW
-              </Link>
-            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (

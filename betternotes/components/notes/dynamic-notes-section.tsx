@@ -31,25 +31,33 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNotes.map((note) => (
           <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
-            <h3 className="text-xl font-bold mb-3">{note.title}</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xl font-bold">{note.title}</h3>
+            </div>
             
-            <div className="flex flex-col items-start mb-4">
+            <div className="flex items-center gap-3 mb-4">
               {note.pageNumber ? (
-                <div className="text-lg font-bold text-black mb-2">
-                  Page {note.pageNumber}
+                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+                  <span className="text-sm font-semibold text-black">
+                    Page {note.pageNumber}
+                  </span>
                 </div>
               ) : (
-                <div className="text-lg font-bold text-gray-400 mb-2">
-                  Page N/A
+                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+                  <span className="text-sm font-semibold text-black">
+                    Page N/A
+                  </span>
                 </div>
               )}
-              <div className="flex items-center">
-                {note.originalPrice && (
-                  <span className="text-gray-400 line-through text-sm mr-2">
-                    ৳{note.originalPrice}
-                  </span>
-                )}
-                <span className="text-xl font-bold text-black">৳{note.price}</span>
+              <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+                <div className="flex items-center">
+                  {note.originalPrice && (
+                    <span className="text-gray-400 line-through text-sm mr-1">
+                      ৳{note.originalPrice}
+                    </span>
+                  )}
+                  <span className="text-sm font-semibold text-black">৳{note.price}</span>
+                </div>
               </div>
             </div>
             
