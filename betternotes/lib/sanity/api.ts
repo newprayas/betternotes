@@ -163,3 +163,87 @@ export async function getSubjects(): Promise<string[]> {
   const query = `*[_type == "note"] | distinct(subject)`;
   return await client.fetch(query);
 }
+
+// Get all unique subject-year combinations
+export async function getSubjectYearCombinations(): Promise<{academicYear: string, subject: string}[]> {
+  const query = `*[_type == "note"] {
+    academicYear,
+    subject
+  } | order(academicYear asc, subject asc)`;
+  
+  const results = await client.fetch(query);
+  
+  // Get unique combinations
+  const uniqueCombinations = results.reduce((acc: any[], note: any) => {
+    const exists = acc.some(item =>
+      item.academicYear === note.academicYear && item.subject === note.subject
+    );
+    if (!exists) {
+      acc.push({
+        academicYear: note.academicYear,
+        subject: note.subject
+      });
+    }
+    return acc;
+  }, []);
+  
+  return uniqueCombinations;
+}
+
+// Helper function to get subject label from value
+export function getSubjectLabel(subjectValue: string): string {
+  const subjectLabels: Record<string, string> = {
+    'anatomy': 'Anatomy',
+    'physiology': 'Physiology',
+    'biochemistry': 'Biochemistry',
+    'pathology': 'Pathology',
+    'pharmacology': 'Pharmacology',
+    'microbiology': 'Microbiology',
+    'forensic-medicine': 'Forensic Medicine',
+    'community-medicine': 'Community Medicine',
+    'ent': 'ENT',
+    'ophthalmology': 'Ophthalmology',
+    'medicine': 'Medicine',
+    'surgery': 'Surgery',
+    'obgyn': 'Obstetrics & Gynecology',
+    'pediatrics': 'Pediatrics',
+    'orthopedics': 'Orthopedics',
+    'dermatology': 'Dermatology',
+    'psychiatry': 'Psychiatry',
+    'radiology': 'Radiology',
+    'anesthesiology': 'Anesthesiology',
+  };
+  
+  return subjectLabels[subjectValue] || subjectValue;
+}
+
+// Helper function to get year label from value
+export function getYearLabel(yearValue: string): string {
+  const yearLabels: Record<string, string> = {
+    'third-year': '3rd Year',
+    'fourth-year': '4th Year',
+    'fifth-year': '5th Year',
+  };
+  
+  return yearLabels[yearValue] || yearValue;
+}
+
+// Helper function to get year color scheme
+export function getYearColorScheme(yearValue: string) {
+  const colorSchemes: Record<string, {bg: string, border: string}> = {
+    'third-year': {
+      bg: 'bg-gradient-to-r from-blue-50 to-indigo-50',
+      border: 'border-blue-500'
+    },
+    'fourth-year': {
+      bg: 'bg-gradient-to-r from-green-50 to-emerald-50',
+      border: 'border-green-500'
+    },
+    'fifth-year': {
+      bg: 'bg-gradient-to-r from-purple-50 to-pink-50',
+      border: 'border-purple-500'
+    }
+  };
+  
+  return colorSchemes[yearValue] || { bg: 'bg-gray-50', border: 'border-gray-500' };
+}

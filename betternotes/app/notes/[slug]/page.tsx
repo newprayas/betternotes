@@ -7,14 +7,11 @@ import Image from 'next/image';
 import {
   ArrowLeft,
   ShoppingCart,
-  Star,
-  Share2,
-  Heart,
   Download,
   BookOpen,
   Calendar,
   Tag,
-  Check
+  X
 } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
@@ -30,9 +27,8 @@ export default function NotePage() {
   const [note, setNote] = useState<Note | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, removeFromCart, cart } = useCart();
 
   // Fetch the note data based on the slug
   useEffect(() => {
@@ -57,9 +53,12 @@ export default function NotePage() {
 
   const handleAddToCart = () => {
     if (note) {
-      addToCart(note);
-      setIsAddedToCart(true);
-      setTimeout(() => setIsAddedToCart(false), 2000);
+      const isInCart = cart.items.some(item => item.note._id === note._id);
+      if (isInCart) {
+        removeFromCart(note._id);
+      } else {
+        addToCart(note);
+      }
     }
   };
 
@@ -183,17 +182,17 @@ export default function NotePage() {
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-all"
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/90 text-white rounded-lg p-3 shadow-lg hover:bg-black transition-all hover:scale-105"
                           aria-label="Previous image"
                         >
-                          <ArrowLeft className="w-5 h-5" />
+                          <ArrowLeft className="w-6 h-6" />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-all"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/90 text-white rounded-lg p-3 shadow-lg hover:bg-black transition-all hover:scale-105"
                           aria-label="Next image"
                         >
-                          <ArrowLeft className="w-5 h-5 rotate-180" />
+                          <ArrowLeft className="w-6 h-6 rotate-180" />
                         </button>
                       </>
                     )}
@@ -206,7 +205,7 @@ export default function NotePage() {
                         <button
                           key={index}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-full overflow-hidden border-2 transition-all ${
+                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                             index === currentImageIndex ? 'border-yellow-400' : 'border-gray-200'
                           }`}
                         >
@@ -256,18 +255,8 @@ export default function NotePage() {
               </div>
 
               {/* Title */}
-              <h1 className="text-2xl md:text-3xl font-bold text-black mb-4">{note.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">{note.title}</h1>
 
-              {/* Rating and Reviews */}
-              <div className="flex items-center mb-6">
-                <div className="flex text-yellow-400 mr-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-current" />
-                  ))}
-                </div>
-                <span className="text-gray-600 mr-2">4.8</span>
-                <span className="text-gray-500">(124 reviews)</span>
-              </div>
 
               {/* Description */}
               <div className="mb-6">
@@ -275,37 +264,10 @@ export default function NotePage() {
                 <p className="text-gray-700 leading-relaxed">{note.description}</p>
               </div>
 
-              {/* Tags */}
-              {note.tags && note.tags.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Tags</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {note.tags.map((tag, index) => (
-                      <span key={index} className="flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
-                        <Tag className="w-3 h-3 mr-1" />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Additional Info */}
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
-                <div className="space-y-2">
-                  <div className="flex items-center text-gray-700">
-                    <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                    Last updated: {new Date(note.updatedAt).toLocaleDateString()}
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <BookOpen className="w-4 h-4 mr-2 text-gray-500" />
-                    Pages: 45 (estimated)
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <Download className="w-4 h-4 mr-2 text-gray-500" />
-                    Format: PDF
-                  </div>
+              {/* Pages Info - Prominent Display */}
+              <div className="mb-6 inline-block">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
+                  <span className="text-lg font-semibold text-black">Pages: 45</span>
                 </div>
               </div>
 
@@ -315,10 +277,10 @@ export default function NotePage() {
                   <div>
                     {note.originalPrice && (
                       <span className="text-gray-400 line-through text-lg mr-2">
-                        ₹{note.originalPrice}
+                        ৳{note.originalPrice}
                       </span>
                     )}
-                    <span className="text-3xl font-bold text-black">₹{note.price}</span>
+                    <span className="text-4xl font-bold text-black">৳{note.price}</span>
                   </div>
                   {note.originalPrice && (
                     <span className="px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
@@ -327,45 +289,26 @@ export default function NotePage() {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={handleAddToCart}
-                    disabled={isAddedToCart}
-                    className={`flex-1 flex items-center justify-center px-6 py-3 rounded-full font-medium transition-colors ${
-                      isAddedToCart
-                        ? 'bg-green-500 text-white'
-                        : 'bg-black text-white hover:bg-gray-800'
+                    className={`flex items-center px-4 py-2 rounded-lg font-bold transition-colors inline-flex whitespace-nowrap text-base self-start ${
+                      cart.items.some(item => item.note._id === note._id)
+                        ? 'bg-red-600 text-white hover:bg-red-700'
+                        : 'bg-yellow-400 text-black hover:bg-yellow-500'
                     }`}
                   >
-                    {isAddedToCart ? (
+                    {cart.items.some(item => item.note._id === note._id) ? (
                       <>
-                        <Check className="w-5 h-5 mr-2" />
-                        Added to Cart
+                        <X className="w-4 h-4 mr-2" />
+                        Remove from Cart
                       </>
                     ) : (
                       <>
-                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        <ShoppingCart className="w-4 h-4 mr-2" />
                         Add to Cart
                       </>
                     )}
-                  </button>
-                  
-                  <button
-                    onClick={() => setIsLiked(!isLiked)}
-                    className={`px-4 py-3 rounded-full border transition-colors ${
-                      isLiked
-                        ? 'bg-red-50 border-red-300 text-red-600'
-                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-                  </button>
-                  
-                  <button
-                    onClick={handleShare}
-                    className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    <Share2 className="w-5 h-5" />
                   </button>
                 </div>
               </div>

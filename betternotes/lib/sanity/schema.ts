@@ -64,8 +64,6 @@ export const noteSchema = {
       type: 'string',
       options: {
         list: [
-          { title: 'First Year', value: 'first-year' },
-          { title: 'Second Year', value: 'second-year' },
           { title: 'Third Year', value: 'third-year' },
           { title: 'Fourth Year', value: 'fourth-year' },
           { title: 'Fifth Year', value: 'fifth-year' },

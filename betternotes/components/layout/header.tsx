@@ -2,21 +2,17 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, ShoppingCart, Search } from 'lucide-react';
+import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { itemCount } = useCart();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -48,13 +44,11 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button
-              onClick={toggleSearch}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
+            {itemCount > 0 && (
+              <Link href="/checkout" className="bg-yellow-400 text-black px-3 py-1 rounded-lg font-bold text-sm hover:bg-yellow-500 transition-colors">
+                CHECKOUT
+              </Link>
+            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (
@@ -67,6 +61,11 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
+            {itemCount > 0 && (
+              <Link href="/checkout" className="bg-yellow-400 text-black px-2 py-1 rounded-lg font-bold text-xs hover:bg-yellow-500 transition-colors">
+                CHECKOUT
+              </Link>
+            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (
@@ -117,35 +116,10 @@ const Header = () => {
               >
                 About
               </Link>
-              <button
-                onClick={toggleSearch}
-                className="text-left text-gray-900 hover:text-yellow-500 transition-colors"
-              >
-                Search
-              </button>
             </nav>
           </div>
         )}
 
-        {/* Search Bar */}
-        {isSearchOpen && (
-          <div className="py-4 border-t border-gray-200">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for notes..."
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                autoFocus
-              />
-              <button
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                onClick={toggleSearch}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </header>
   );
