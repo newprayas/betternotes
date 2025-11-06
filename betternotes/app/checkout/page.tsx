@@ -201,12 +201,12 @@ export default function CheckoutPage() {
                         <span className="font-medium">৳{cart.total}</span>
                       </div>
                       
-                      {cart.quantityDiscount && cart.quantityDiscount > 0 && (
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-gray-600">Quantity Discount</span>
-                          <span className="font-medium text-green-600">-৳{cart.quantityDiscount}</span>
-                        </div>
-                      )}
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-600">Quantity Discount</span>
+                        <span className={`font-medium ${(cart.quantityDiscount || 0) > 0 ? 'text-green-600' : 'text-gray-500'}`}>
+                          -৳{cart.quantityDiscount || 0}
+                        </span>
+                      </div>
                       {cart.discountCode && (
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-gray-600">Discount ({cart.discountCode})</span>

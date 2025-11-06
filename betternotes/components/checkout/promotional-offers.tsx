@@ -1,17 +1,16 @@
 'use client';
 
 import { useCart } from '@/lib/cart-context';
-import { Gift, Star, Zap } from 'lucide-react';
 
 const PromotionalOffers = () => {
   const { itemCount } = useCart();
 
   // Define discount tiers
   const discountTiers = [
-    { minItems: 3, discount: 50, icon: Gift },
-    { minItems: 5, discount: 100, icon: Star },
-    { minItems: 8, discount: 150, icon: Zap },
-    { minItems: 10, discount: 200, icon: Star }
+    { minItems: 3, discount: 50 },
+    { minItems: 5, discount: 100 },
+    { minItems: 8, discount: 150 },
+    { minItems: 10, discount: 200 }
   ];
 
   // Determine which message to show based on cart count
@@ -20,7 +19,7 @@ const PromotionalOffers = () => {
     
     if (itemCount === 1) {
       return {
-        message: "You are close to a discount!",
+        message: "You are so close to a discount!",
         subMessage: "Add 2 more notes and Get 50 tk discount!",
         nextTier: 3,
         needed: 2
@@ -29,7 +28,7 @@ const PromotionalOffers = () => {
     
     if (itemCount === 2) {
       return {
-        message: "You are close to a discount!",
+        message: "You are so close to a discount!",
         subMessage: "Add 1 more note and Get 50 tk discount!",
         nextTier: 3,
         needed: 1
@@ -38,10 +37,10 @@ const PromotionalOffers = () => {
     
     if (itemCount === 3 || itemCount === 4) {
       return {
-        message: "Great choice! You've unlocked a discount by buying 3 Notes!",
-        subMessage: itemCount === 3
-          ? "💯 Add 2 more notes = 5 notes and Get 100 tk discount!"
-          : "💯 Add 1 more note = 5 notes and Get 100 tk discount!",
+        message: "Great choice!",
+        subMessage: `You've unlocked a discount by buying ${itemCount} Notes!${itemCount === 3
+          ? " 💯 Add 2 more notes = 5 notes and Get 100 tk discount!"
+          : " 💯 Add 1 more note = 5 notes and Get 100 tk discount!"}`,
         nextTier: 5,
         needed: itemCount === 3 ? 2 : 1,
         currentDiscount: 50
@@ -50,12 +49,12 @@ const PromotionalOffers = () => {
     
     if (itemCount === 5 || itemCount === 6 || itemCount === 7) {
       return {
-        message: "Awesome! You've unlocked a bigger discount!",
-        subMessage: itemCount === 5
-          ? "💯 Add 3 more notes = 8 notes and Get 150 tk discount!"
+        message: "Awesome!",
+        subMessage: `You've unlocked a bigger discount by buying ${itemCount} Notes!${itemCount === 5
+          ? " 💯 Add 3 more notes = 8 notes and Get 150 tk discount!"
           : itemCount === 6
-            ? "💯 Add 2 more notes = 8 notes and Get 150 tk discount!"
-            : "💯 Add 1 more note = 8 notes and Get 150 tk discount!",
+            ? " 💯 Add 2 more notes = 8 notes and Get 150 tk discount!"
+            : " 💯 Add 1 more note = 8 notes and Get 150 tk discount!"}`,
         nextTier: 8,
         needed: itemCount === 5 ? 3 : itemCount === 6 ? 2 : 1,
         currentDiscount: 100
@@ -64,10 +63,10 @@ const PromotionalOffers = () => {
     
     if (itemCount === 8 || itemCount === 9) {
       return {
-        message: "Fantastic! You've unlocked an amazing discount!",
-        subMessage: itemCount === 8
-          ? "💯 Add 2 more notes = 10 notes and Get 200 tk discount!"
-          : "💯 Add 1 more note = 10 notes and Get 200 tk discount!",
+        message: "Fantastic!",
+        subMessage: `You've unlocked an amazing discount by buying ${itemCount} Notes!${itemCount === 8
+          ? " 💯 Add 2 more notes = 10 notes and Get 200 tk discount!"
+          : " 💯 Add 1 more note = 10 notes and Get 200 tk discount!"}`,
         nextTier: 10,
         needed: itemCount === 8 ? 2 : 1,
         currentDiscount: 150
@@ -76,8 +75,8 @@ const PromotionalOffers = () => {
     
     if (itemCount >= 10) {
       return {
-        message: "Incredible! You've unlocked our maximum discount!",
-        subMessage: "You're getting 200 tk off your order!",
+        message: "Incredible!",
+        subMessage: `You've unlocked our maximum discount by buying ${itemCount} Notes! You're getting 200 tk off your order!`,
         currentDiscount: 200
       };
     }
@@ -91,37 +90,28 @@ const PromotionalOffers = () => {
     <div className="mb-6">
       {/* Promotional Offers */}
       <div className="bg-white border-2 border-black rounded-lg p-6 mb-4 shadow-sm">
-        <h2 className="text-xl font-bold text-black mb-4 text-center">🎉 Special Offers 🎉</h2>
+        <h2 className="text-xl font-bold text-black mb-3 text-center">🎉 Special Offers 🎉</h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 max-w-4xl mx-auto">
           {discountTiers.map((tier, index) => {
-            const Icon = tier.icon;
             const isActive = itemCount >= tier.minItems;
             
             return (
               <div
                 key={index}
-                className={`relative rounded-lg p-3 transition-all duration-300 border-2 ${
+                className={`rounded-md p-2 transition-all duration-300 border ${
                   isActive
-                    ? 'bg-black text-white border-black'
-                    : 'bg-gray-100 text-gray-700 border-gray-300'
+                    ? 'bg-yellow-50 text-gray-900 border-yellow-300'
+                    : 'bg-gray-50 text-gray-600 border-gray-200'
                 }`}
               >
-                <div className="flex flex-col items-center">
-                  <Icon className={`w-6 h-6 mb-2 ${isActive ? 'text-white' : 'text-gray-600'}`} />
-                  <div className="text-center">
-                    <div className={`font-bold text-sm ${isActive ? 'text-white' : 'text-gray-800'}`}>
-                      Buy {tier.minItems}+ notes
-                    </div>
-                    <div className={`text-sm font-semibold ${isActive ? 'text-white' : 'text-gray-700'}`}>
-                      Get {tier.discount} tk off
-                    </div>
+                <div className="text-center">
+                  <div className={`font-semibold text-sm ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>
+                    Buy {tier.minItems} notes
                   </div>
-                  {isActive && (
-                    <div className="mt-2 bg-green-500 text-white text-xs rounded-full px-2 py-1">
-                      ✓ Active
-                    </div>
-                  )}
+                  <div className={`text-sm font-bold ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>
+                    Get {tier.discount} tk off
+                  </div>
                 </div>
               </div>
             );
@@ -141,10 +131,17 @@ const PromotionalOffers = () => {
           }`}>
             {discountMessage.message}
           </div>
-          <div className={`text-sm ${
+          <div className={`text-sm whitespace-pre-line ${
             discountMessage.currentDiscount ? 'text-green-700' : 'text-blue-700'
           }`}>
-            {discountMessage.subMessage}
+            {discountMessage.subMessage && discountMessage.subMessage.includes('Get') ? (
+              <>
+                {discountMessage.subMessage.split('Get')[0]}
+                <span className="font-bold">Get{discountMessage.subMessage.split('Get')[1]}</span>
+              </>
+            ) : (
+              discountMessage.subMessage
+            )}
           </div>
           {discountMessage.currentDiscount && (
             <div className="mt-2 text-lg font-bold text-green-800">
