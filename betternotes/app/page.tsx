@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, BookOpen, Users, Award } from 'lucide-react';
+import { Star, BookOpen, Users, Award, Lightbulb, Brain, Target, Clock, RefreshCw, Rocket, FileText, CheckCircle } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ImageSlideshow from '@/components/ui/image-slideshow';
@@ -54,8 +54,8 @@ export default async function Home() {
                     <p className="text-lg font-bold">🎉 Honours in Community Medicine </p>
                     <p className="text-lg font-bold">🎉 Honours in Microbiology </p>
                     <p className="text-lg font-bold">🎉 Honours in Pharmacology </p>
-                    <p className="text-lg font-bold">🥳 Rank 1 in CMC - 2nd PROF </p>
-                    <p className="text-lg font-bold">🥳 Rank 7 in CMC - FINAL PROF </p>
+                    <p className="text-lg font-bold">🥳 Rank 1 CMC - 2nd PROF </p>
+                    <p className="text-lg font-bold">🥳 Rank 7 CMC - FINAL PROF </p>
                   </div>
                 </div>
                 
@@ -67,36 +67,124 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-12 md:py-16 bg-white">
+        {/* Need Guidance Section */}
+        <section className="py-12 md:py-16 bg-gradient-to-b from-blue-50 to-purple-50">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BookOpen className="w-8 h-8 text-black" />
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">Need Guidance?</h2>
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">I Teach Medical students</h3>
+                
+                <div className="bg-white rounded-lg p-6 md:p-8 shadow-lg mb-8">
+                  <div className="space-y-4 mb-6">
+                    <p className="text-xl md:text-2xl font-bold text-gray-800">
+                      ✨ Do you hate rote learning?
+                    </p>
+                    <p className="text-xl md:text-2xl font-bold text-red-500">
+                      This is for you ❤️
+                    </p>
+                    <p className="text-xl md:text-2xl font-bold">
+                      ✅ Tuitions avilable for medical students
+                    </p>
+                  </div>
+                  
+                
+                  
+                  <div className="text-left bg-yellow-50 rounded-lg p-6 mb-8">
+                    <h4 className="text-lg font-bold text-black mb-4">Tips on</h4>
+                    <ul className="space-y-3 text-gray-700">
+                      <li className="flex items-start">
+                        <span className="text-black mr-2">🎯</span>
+                        <span>How to study? To understand and do well in exams ✨</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-black mr-2">🎯</span>
+                        <span>Which questions come during exams? To focus on what matters. ✨ </span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-black mr-2">🎯</span>
+                        <span>How to answer in exams? The best practices ✨ </span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-black mr-2">🎯</span>
+                        <span>What to focus on for exams? What to skip? To study effiecntly ✨</span>
+                      </li>
+                        <li className="flex items-start">
+                        <span className="text-black mr-2">🎯</span>
+                        <span>What resources I use in my own studies? To make studing EASIER and enjoyable ✨</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-black mr-2">🥳</span>
+                        <span>And MORE! 🎉 </span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="mb-8">
+                    <a
+                      href="https://t.me/prayas_ojha"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-bold hover:bg-yellow-500 transition-colors inline-flex whitespace-nowrap text-lg"
+                    >
+                      CONTACT ME
+                    </a>
+                  </div>
+                  
+                  <div className="border-t pt-6">
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">Location:</span>
+                        <span>Near Chawkbazar</span>
+                      </div>
+                
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Comprehensive Coverage</h3>
-                <p className="text-gray-600">
-                  Complete notes covering all subjects and academic years for MBBS students.
-                </p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-black" />
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="pt-0 pb-4 bg-white">
+          <div className="container">
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Lightbulb className="w-8 h-8 text-black" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Student Approved</h3>
-                <p className="text-gray-600">
-                  Trusted by hundreds of medical students across different universities.
-                </p>
+                <div className="bg-yellow-100 rounded-full px-6 py-3 text-center">
+                  <h3 className="text-lg font-semibold">EASY EXPLANATIONS</h3>
+                  <p className="text-sm font-medium text-gray-700">Understand not memorize</p>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award className="w-8 h-8 text-black" />
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Target className="w-8 h-8 text-black" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Exam Focused</h3>
-                <p className="text-gray-600">
-                  Specially designed to help you score high in university and entrance exams.
-                </p>
+                <div className="bg-yellow-100 rounded-full px-6 py-3 text-center">
+                  <h3 className="text-lg font-semibold">EXAM FOCUSED</h3>
+                  <p className="text-sm font-medium text-gray-700">Make best use of your time</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <RefreshCw className="w-8 h-8 text-black" />
+                </div>
+                <div className="bg-yellow-100 rounded-full px-6 py-3 text-center">
+                  <h3 className="text-lg font-semibold">QUICK REVIEW</h3>
+                  <p className="text-sm font-medium text-gray-700">Fastest way to cover syllabus</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-8 h-8 text-black" />
+                </div>
+                <div className="bg-yellow-100 rounded-full px-6 py-3 text-center">
+                  <h3 className="text-lg font-semibold">LECTURE NOTES</h3>
+                  <p className="text-sm font-medium text-gray-700">Answers from trusted sources</p>
+                </div>
               </div>
             </div>
           </div>
@@ -118,7 +206,7 @@ export default async function Home() {
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               Get access to premium medical notes that will help you understand complex concepts and score high in your exams.
             </p>
-            <Link href="/notes" className="btn-accent">
+            <Link href="/notes" className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors inline-flex whitespace-nowrap">
               Browse Notes Now
             </Link>
           </div>
