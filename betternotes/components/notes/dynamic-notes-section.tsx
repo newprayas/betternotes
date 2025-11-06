@@ -31,38 +31,38 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNotes.map((note) => (
           <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between mb-3">
+            <div className="mb-3">
               <h3 className="text-xl font-bold">{note.title}</h3>
             </div>
             
             <div className="flex items-center gap-3 mb-4">
               {note.pageNumber ? (
-                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
                   <span className="text-sm font-semibold text-black">
-                    Page {note.pageNumber}
+                    Page: {note.pageNumber}
                   </span>
                 </div>
               ) : (
-                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
                   <span className="text-sm font-semibold text-black">
-                    Page N/A
+                    Page: N/A
                   </span>
                 </div>
               )}
-              <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg">
+              <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg">
                 <div className="flex items-center">
                   {note.originalPrice && (
                     <span className="text-gray-400 line-through text-sm mr-1">
                       ৳{note.originalPrice}
                     </span>
                   )}
-                  <span className="text-sm font-semibold text-black">৳{note.price}</span>
+                  <span className="text-sm font-semibold text-black">Price: ৳{note.price}</span>
                 </div>
               </div>
             </div>
             
             <div className="flex gap-2">
-              <Link href={`/notes/${note.slug}`} className="bg-black text-white px-4 py-2 rounded-lg font-bold text-center hover:bg-gray-800 transition-colors">
+              <Link href={`/notes/${note.slug}`} className="bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-yellow-500 transition-colors text-sm">
                 View Details
               </Link>
               <button
@@ -74,7 +74,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
                     addToCart(note);
                   }
                 }}
-                className={`px-4 py-2 font-bold rounded-lg transition-colors ${
+                className={`px-3 py-1.5 font-bold rounded-lg transition-colors text-sm ${
                   cart.items.some(item => item.note._id === note._id)
                     ? 'bg-red-100 text-red-700 hover:bg-red-200 border border-red-300'
                     : 'bg-yellow-400 text-black hover:bg-yellow-500'
