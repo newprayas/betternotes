@@ -45,7 +45,7 @@ export const noteSchema = {
     },
     {
       name: 'images',
-      title: 'Images',
+      title: '📸 Images',
       type: 'array',
       of: [
         {
@@ -58,14 +58,27 @@ export const noteSchema = {
               name: 'alt',
               title: 'Alt Text',
               type: 'string',
+              description: 'Describe the image for accessibility and SEO',
             },
           ],
+          preview: {
+            select: {
+              title: 'alt',
+              media: 'asset',
+            },
+            prepare: (selection: any) => ({
+              title: selection.title || 'Untitled Image',
+              media: selection.media,
+            }),
+          },
         },
       ],
       options: {
         layout: 'grid',
+        addNewButton: '+ Add Image',
       },
-      validation: (Rule: any) => Rule.required().min(1),
+      description: '🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard.',
+      validation: (Rule: any) => Rule.required().min(1).error('At least one image is required'),
     },
     {
       name: 'academicYear',
