@@ -44,6 +44,11 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            {itemCount > 0 && (
+              <span className="text-base font-semibold text-black bg-yellow-100 px-3 py-1 rounded-full">
+                {itemCount} NOTES
+              </span>
+            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (
@@ -56,6 +61,11 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
+            {itemCount > 0 && (
+              <span className="text-sm font-semibold text-black bg-yellow-100 px-3 py-1 rounded-full">
+                {itemCount} NOTES
+              </span>
+            )}
             <Link href="/checkout" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
               <ShoppingCart className="w-5 h-5" />
               {itemCount > 0 && (

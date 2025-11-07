@@ -23,24 +23,8 @@ const CartBottomBar = () => {
     }
   }, [itemCount]);
 
-  // Hide the cart bottom bar on checkout page
-  if (pathname === '/checkout' || !shouldRender) return null;
-
-  return (
-    <div
-      className={`fixed bottom-0 left-0 right-0 z-40 transform transition-transform duration-300 ease-in-out ${
-        isVisible ? 'translate-y-0' : 'translate-y-full'
-      }`}
-    >
-      <div className="container flex justify-center py-4">
-        <div className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-full shadow-lg text-center">
-          <p className="text-xs md:text-sm">
-            🎉 Please add ALL the Notes you want to Cart 🎉
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  // Hide the cart bottom bar completely - moved to header
+  return null;
 };
 
 export default CartBottomBar;
