@@ -14,7 +14,7 @@ import {
   X,
   Copy
 } from 'lucide-react';
-import Header from '@/components/layout/header';
+import Header from '@/commponents/layout/header';
 import Footer from '@/components/layout/footer';
 import PromotionalOffers from '@/components/checkout/promotional-offers';
 import { useCart } from '@/lib/cart-context';
@@ -128,7 +128,7 @@ export default function CheckoutPage() {
                   <Send className="w-5 h-5 mr-2" />
                   Contact on Telegram
                 </a>
-                <Link href="/" className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition-colors">
+                <Link href="/" className="inline-flex items-center px-6 py-3 bg-yellow-100 text-black font-bold rounded-full hover:bg-yellow-200 transition-colors">
                   Continue Shopping
                 </Link>
               </div>
@@ -148,8 +148,8 @@ export default function CheckoutPage() {
       <main className="flex-grow bg-gray-50 py-8">
         <div className="container">
           <div className="mb-6">
-            <Link href="/notes" className="flex items-center text-gray-600 hover:text-black transition-colors font-bold">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <Link href="/notes" className="inline-flex items-center px-4 py-2 bg-yellow-100 text-black font-bold rounded-full hover:bg-yellow-200 transition-colors">
+              <ArrowLeft className="w-6 h-6 mr-2 text-black font-bold" />
               Continue Shopping
             </Link>
           </div>
