@@ -42,7 +42,7 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
         newItems = [...state.items, { note, quantity: 1 }];
       }
       
-      const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
+      const total = newItems.reduce((sum, item) => sum + ((item.note.price || 0) * item.quantity), 0);
       const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
       
       // Calculate quantity-based discount
@@ -68,7 +68,7 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
     
     case 'REMOVE_FROM_CART': {
       const newItems = state.items.filter(item => item.note._id !== action.payload);
-      const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
+      const total = newItems.reduce((sum, item) => sum + ((item.note.price || 0) * item.quantity), 0);
       const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
       
       // Calculate quantity-based discount
@@ -102,7 +102,7 @@ const cartReducer = (state: Cart, action: CartAction): Cart => {
         item.note._id === noteId ? { ...item, quantity } : item
       );
       
-      const total = newItems.reduce((sum, item) => sum + (item.note.price * item.quantity), 0);
+      const total = newItems.reduce((sum, item) => sum + ((item.note.price || 0) * item.quantity), 0);
       const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
       
       // Calculate quantity-based discount

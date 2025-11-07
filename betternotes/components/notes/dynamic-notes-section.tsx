@@ -34,12 +34,12 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
         {filteredNotes.map((note) => (
           <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xl font-bold">{note.title}</h3>
+              <h3 className="text-xl font-bold">{note.title || 'Untitled Note'}</h3>
             </div>
             
             <div className="mb-4">
               <div className="text-base font-semibold text-black mb-1">
-                {note.pageNumber ? `${note.pageNumber} Pages` : 'N/A Pages'}
+                {note.pageNumber ? `${note.pageNumber} Pages` : 'Page count not available'}
               </div>
               <div className="text-base font-semibold text-black">
                 {note.originalPrice && (
@@ -47,7 +47,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
                     ৳{note.originalPrice}
                   </span>
                 )}
-                ৳{note.price}
+                ৳{note.price || 0}
               </div>
             </div>
             

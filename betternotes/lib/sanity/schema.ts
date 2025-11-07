@@ -24,13 +24,12 @@ export const noteSchema = {
       name: 'description',
       title: 'Description',
       type: 'text',
-      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'price',
       title: 'Price',
       type: 'number',
-      validation: (Rule: import('sanity').Rule) => Rule.required().min(0),
+      validation: (Rule: import('sanity').Rule) => Rule.min(0),
     },
     {
       name: 'originalPrice',
@@ -41,7 +40,7 @@ export const noteSchema = {
       name: 'pageNumber',
       title: 'Page Number',
       type: 'number',
-      validation: (Rule: import('sanity').Rule) => Rule.required().min(1),
+      validation: (Rule: import('sanity').Rule) => Rule.min(1),
     },
     {
       name: 'images',
@@ -78,7 +77,6 @@ export const noteSchema = {
         addNewButton: '+ Add Image',
       },
       description: '🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard.',
-      validation: (Rule: import('sanity').Rule) => Rule.required().min(1).error('At least one image is required'),
     },
     {
       name: 'academicYear',
@@ -91,7 +89,6 @@ export const noteSchema = {
           { title: 'Fifth Year', value: 'fifth-year' },
         ],
       },
-      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'subject',
@@ -120,7 +117,6 @@ export const noteSchema = {
           { title: 'Anesthesiology', value: 'anesthesiology' },
         ],
       },
-      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'tags',

@@ -3,11 +3,11 @@ export interface Note {
   _id: string;
   title: string;
   slug: string;
-  description: string;
-  price: number;
+  description?: string;
+  price?: number;
   originalPrice?: number;
   pageNumber?: number;
-  images: {
+  images?: {
     _key?: string;
     _type: string;
     asset?: {
@@ -17,12 +17,12 @@ export interface Note {
       metadata?: any;
     };
   }[];
-  academicYear: string;
-  subject: string;
-  tags: string[];
-  featured: boolean;
-  createdAt: string;
-  updatedAt: string;
+  academicYear?: string;
+  subject?: string;
+  tags?: string[];
+  featured?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Discount code types

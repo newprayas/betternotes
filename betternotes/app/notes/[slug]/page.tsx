@@ -84,22 +84,24 @@ export default function NotePage() {
   };
 
   const nextImage = () => {
-    if (note && note.images.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % note.images.length);
+    if (note && note.images && note.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % (note.images?.length || 1));
     }
   };
 
   const prevImage = () => {
-    if (note && note.images.length > 0) {
-      setCurrentImageIndex((prev) => (prev - 1 + note.images.length) % note.images.length);
+    if (note && note.images && note.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + (note.images?.length || 1)) % (note.images?.length || 1));
     }
   };
 
-  const formatSubject = (subject: string) => {
+  const formatSubject = (subject: string | undefined) => {
+    if (!subject) return 'Subject not available';
     return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const formatAcademicYear = (year: string) => {
+  const formatAcademicYear = (year: string | undefined) => {
+    if (!year) return 'Academic year not available';
     return year.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
@@ -165,7 +167,7 @@ export default function NotePage() {
                     {note.images[currentImageIndex]?.asset ? (
                       <Image
                         src={urlFor(note.images[currentImageIndex]).width(800).url()}
-                        alt={`${note.title} - Page ${currentImageIndex + 1}`}
+                        alt={`${note.title || 'Note'} - Page ${currentImageIndex + 1}`}
                         fill
                         className="object-contain"
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -184,7 +186,7 @@ export default function NotePage() {
                     )}
                     
                     {/* Navigation Arrows */}
-                    {note.images.length > 1 && (
+                    {note.images && note.images.length > 1 && (
                       <>
                         <button
                           onClick={prevImage}
@@ -205,7 +207,7 @@ export default function NotePage() {
                   </div>
                   
                   {/* Thumbnail Gallery */}
-                  {note.images.length > 1 && (
+                  {note.images && note.images.length > 1 && (
                     <div className="flex gap-2 mt-4 overflow-x-auto">
                       {note.images.map((image, index) => (
                         <button
@@ -241,8 +243,10 @@ export default function NotePage() {
                 </div>
               ) : (
                 <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <BookOpen className="w-24 h-24 text-gray-400" />
+                  <div className="w-full h-full bg-gray-200 flex flex-col items-center justify-center text-center p-4">
+                    <BookOpen className="w-24 h-24 text-gray-400 mb-4" />
+                    <p className="text-gray-500 font-semibold">No preview available</p>
+                    <p className="text-gray-400 text-sm mt-2">Images for this note will be available after purchase</p>
                   </div>
                 </div>
               )}
@@ -267,14 +271,16 @@ export default function NotePage() {
               {/* Description */}
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-2">Description</h2>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{note.description}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {note.description ? note.description : 'No description available for this note.'}
+                </p>
               </div>
 
               {/* Pages Info - Prominent Display */}
               <div className="mb-2">
                 <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
                   <span className="text-lg font-semibold text-black">
-                    Pages: {note.pageNumber || 'N/A'}
+                    Pages: {note.pageNumber ? note.pageNumber : 'Page count not available'}
                   </span>
                 </div>
               </div>
@@ -288,8 +294,8 @@ export default function NotePage() {
                         ৳{note.originalPrice}
                       </span>
                     )}
-                    <span className="text-lg font-semibold text-black">Price: ৳{note.price}</span>
-                    {note.originalPrice && (
+                    <span className="text-lg font-semibold text-black">Price: ৳{note.price || 0}</span>
+                    {note.originalPrice && note.price && (
                       <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
                         {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF
                       </span>

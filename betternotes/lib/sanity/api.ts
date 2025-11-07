@@ -3,7 +3,7 @@ import { Note, DiscountCode, NoteFilters } from '@/types';
 
 // Get all notes with optional filtering
 export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
-  let query = `*[_type == "note"`;
+  let query = `*[_type == "note" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""`;
   
   if (filters) {
     const conditions = [];
@@ -60,7 +60,7 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
 
 // Get featured notes
 export async function getFeaturedNotes(): Promise<Note[]> {
-  const query = `*[_type == "note" && featured == true] | order(createdAt desc) {
+  const query = `*[_type == "note" && featured == true && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""] | order(createdAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -91,7 +91,7 @@ export async function getFeaturedNotes(): Promise<Note[]> {
 
 // Get a single note by slug
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
-  const query = `*[_type == "note" && slug.current == "${slug}"][0] {
+  const query = `*[_type == "note" && slug.current == "${slug}" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""][0] {
     _id,
     title,
     "slug": slug.current,
