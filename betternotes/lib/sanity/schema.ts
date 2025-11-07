@@ -8,7 +8,7 @@ export const noteSchema = {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'slug',
@@ -18,19 +18,19 @@ export const noteSchema = {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'description',
       title: 'Description',
       type: 'text',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'price',
       title: 'Price',
       type: 'number',
-      validation: (Rule: any) => Rule.required().min(0),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(0),
     },
     {
       name: 'originalPrice',
@@ -41,7 +41,7 @@ export const noteSchema = {
       name: 'pageNumber',
       title: 'Page Number',
       type: 'number',
-      validation: (Rule: any) => Rule.required().min(1),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(1),
     },
     {
       name: 'images',
@@ -66,7 +66,7 @@ export const noteSchema = {
               title: 'alt',
               media: 'asset',
             },
-            prepare: (selection: any) => ({
+            prepare: (selection: { title?: string; media?: any }) => ({
               title: selection.title || 'Untitled Image',
               media: selection.media,
             }),
@@ -78,7 +78,7 @@ export const noteSchema = {
         addNewButton: '+ Add Image',
       },
       description: '🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard.',
-      validation: (Rule: any) => Rule.required().min(1).error('At least one image is required'),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(1).error('At least one image is required'),
     },
     {
       name: 'academicYear',
@@ -91,7 +91,7 @@ export const noteSchema = {
           { title: 'Fifth Year', value: 'fifth-year' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'subject',
@@ -120,7 +120,7 @@ export const noteSchema = {
           { title: 'Anesthesiology', value: 'anesthesiology' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'tags',
@@ -153,25 +153,25 @@ export const discountCodeSchema = {
       name: 'code',
       title: 'Code',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'discountPercentage',
       title: 'Discount Percentage',
       type: 'number',
-      validation: (Rule: any) => Rule.required().min(1).max(100),
+      validation: (Rule: import('sanity').Rule) => Rule.required().min(1).max(100),
     },
     {
       name: 'validFrom',
       title: 'Valid From',
       type: 'datetime',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'validUntil',
       title: 'Valid Until',
       type: 'datetime',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'isActive',
