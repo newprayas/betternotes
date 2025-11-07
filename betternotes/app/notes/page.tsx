@@ -7,8 +7,8 @@ import { Filter, BookOpen, X } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import DynamicNotesSection from '@/components/notes/dynamic-notes-section';
-import { Note, NoteFilters } from '@/types';
-import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel } from '@/lib/sanity/api';
+import { Note, NoteFilters, Subject } from '@/types';
+import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel, getSubjects } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
 import { useCart } from '@/lib/cart-context';
 import { useScroll } from '@/lib/scroll-context';
@@ -19,27 +19,13 @@ const academicYears = [
   { value: 'fifth-year', label: 'Fifth Year' },
 ];
 
-const subjects = [
-  { value: 'anatomy', label: 'Anatomy' },
-  { value: 'physiology', label: 'Physiology' },
-  { value: 'biochemistry', label: 'Biochemistry' },
-  { value: 'pathology', label: 'Pathology' },
-  { value: 'pharmacology', label: 'Pharmacology' },
-  { value: 'microbiology', label: 'Microbiology' },
-  { value: 'forensic-medicine', label: 'Forensic Medicine' },
-  { value: 'community-medicine', label: 'Community Medicine' },
-  { value: 'ent', label: 'ENT' },
-  { value: 'ophthalmology', label: 'Ophthalmology' },
-  { value: 'medicine', label: 'Medicine' },
-  { value: 'surgery', label: 'Surgery' },
-  { value: 'obgyn', label: 'Obstetrics & Gynecology' },
-  { value: 'pediatrics', label: 'Pediatrics' },
-];
+// We'll fetch subjects dynamically from Sanity
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
   const [subjectYearCombinations, setSubjectYearCombinations] = useState<{academicYear: string, subject: string}[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<NoteFilters>({});
   const [expandedYear, setExpandedYear] = useState<string | null>(null);
@@ -51,13 +37,15 @@ export default function NotesPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [liveNotes, combinations] = await Promise.all([
+        const [liveNotes, combinations, subjectsData] = await Promise.all([
           getNotes(),
-          getSubjectYearCombinations()
+          getSubjectYearCombinations(),
+          getSubjects()
         ]);
         setNotes(liveNotes);
         setFilteredNotes(liveNotes);
         setSubjectYearCombinations(combinations);
+        setSubjects(subjectsData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {

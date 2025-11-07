@@ -93,30 +93,9 @@ export const noteSchema = {
     {
       name: 'subject',
       title: 'Subject',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Anatomy', value: 'anatomy' },
-          { title: 'Physiology', value: 'physiology' },
-          { title: 'Biochemistry', value: 'biochemistry' },
-          { title: 'Pathology', value: 'pathology' },
-          { title: 'Pharmacology', value: 'pharmacology' },
-          { title: 'Microbiology', value: 'microbiology' },
-          { title: 'Forensic Medicine', value: 'forensic-medicine' },
-          { title: 'Community Medicine', value: 'community-medicine' },
-          { title: 'ENT', value: 'ent' },
-          { title: 'Ophthalmology', value: 'ophthalmology' },
-          { title: 'Medicine', value: 'medicine' },
-          { title: 'Surgery', value: 'surgery' },
-          { title: 'Obstetrics & Gynecology', value: 'obgyn' },
-          { title: 'Pediatrics', value: 'pediatrics' },
-          { title: 'Orthopedics', value: 'orthopedics' },
-          { title: 'Dermatology', value: 'dermatology' },
-          { title: 'Psychiatry', value: 'psychiatry' },
-          { title: 'Radiology', value: 'radiology' },
-          { title: 'Anesthesiology', value: 'anesthesiology' },
-        ],
-      },
+      type: 'reference',
+      to: [{ type: 'subject' }],
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'tags',
@@ -134,7 +113,7 @@ export const noteSchema = {
   preview: {
     select: {
       title: 'title',
-      subtitle: 'subject',
+      subtitle: 'subject.name',
     },
   },
 };
@@ -191,6 +170,43 @@ export const discountCodeSchema = {
     select: {
       title: 'code',
       subtitle: 'discountPercentage',
+    },
+  },
+};
+
+// Subject schema for Sanity CMS
+export const subjectSchema = {
+  name: 'subject',
+  title: 'Subject',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'Subject Name',
+      type: 'string',
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
+    },
+    {
+      name: 'value',
+      title: 'Value (for URLs)',
+      type: 'slug',
+      options: {
+        source: 'name',
+        maxLength: 96,
+      },
+      validation: (Rule: import('sanity').Rule) => Rule.required(),
+    },
+    {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      description: 'Optional description of the subject',
+    },
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'value.current',
     },
   },
 };

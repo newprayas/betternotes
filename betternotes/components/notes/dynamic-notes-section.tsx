@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { Note } from '@/types';
 import { useCart } from '@/lib/cart-context';
 import { useScroll } from '@/lib/scroll-context';
-import { getSubjectLabel } from '@/lib/sanity/api';
+import { getSubjectLabel, getSubjectValue } from '@/lib/sanity/api';
 
 interface DynamicNotesSectionProps {
   notes: Note[];
@@ -19,8 +19,8 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
   const subjectLabel = getSubjectLabel(subject);
 
   // Filter notes for this specific year and subject
-  const filteredNotes = notes.filter(note => 
-    note.academicYear === academicYear && note.subject === subject
+  const filteredNotes = notes.filter(note =>
+    note.academicYear === academicYear && getSubjectValue(note.subject) === subject
   );
 
   if (filteredNotes.length === 0) return null;

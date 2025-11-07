@@ -18,7 +18,7 @@ import Footer from '@/components/layout/footer';
 import { useCart } from '@/lib/cart-context';
 import { useScroll } from '@/lib/scroll-context';
 import { Note } from '@/types';
-import { getNoteBySlug } from '@/lib/sanity/api';
+import { getNoteBySlug, getSubjectName } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
 
 export default function NotePage() {
@@ -95,9 +95,9 @@ export default function NotePage() {
     }
   };
 
-  const formatSubject = (subject: string | undefined) => {
+  const formatSubject = (subject: any) => {
     if (!subject) return 'Subject not available';
-    return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return getSubjectName(subject);
   };
 
   const formatAcademicYear = (year: string | undefined) => {

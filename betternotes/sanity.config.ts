@@ -1,7 +1,7 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
-import { noteSchema, discountCodeSchema } from './lib/sanity/schema'
+import { noteSchema, discountCodeSchema, subjectSchema } from './lib/sanity/schema'
 
 const config = defineConfig({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 't1y8nndf',
@@ -17,6 +17,10 @@ const config = defineConfig({
               .schemaType('note')
               .child(S.documentTypeList('note').title('Notes')),
             S.listItem()
+              .title('Subjects')
+              .schemaType('subject')
+              .child(S.documentTypeList('subject').title('Subjects')),
+            S.listItem()
               .title('Discount Codes')
               .schemaType('discountCode')
               .child(S.documentTypeList('discountCode').title('Discount Codes')),
@@ -25,7 +29,7 @@ const config = defineConfig({
     visionTool(),
   ],
   schema: {
-    types: [noteSchema, discountCodeSchema],
+    types: [noteSchema, discountCodeSchema, subjectSchema],
   },
 })
 

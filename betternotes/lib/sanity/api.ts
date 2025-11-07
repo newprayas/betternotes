@@ -1,9 +1,9 @@
 import { client } from './client';
-import { Note, DiscountCode, NoteFilters } from '@/types';
+import { Note, DiscountCode, NoteFilters, Subject } from '@/types';
 
 // Get all notes with optional filtering
 export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
-  let query = `*[_type == "note" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""`;
+  let query = `*[_type == "note" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""`;
   
   if (filters) {
     const conditions = [];
@@ -13,7 +13,7 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
     }
     
     if (filters.subject) {
-      conditions.push(`subject == "${filters.subject}"`);
+      conditions.push(`subject->value.current == "${filters.subject}"`);
     }
     
     if (filters.priceRange) {
@@ -48,7 +48,13 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
       }
     },
     academicYear,
-    subject,
+    subject->{
+      _id,
+      _type,
+      name,
+      value,
+      description
+    },
     tags,
     featured,
     createdAt,
@@ -60,7 +66,7 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
 
 // Get featured notes
 export async function getFeaturedNotes(): Promise<Note[]> {
-  const query = `*[_type == "note" && featured == true && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""] | order(createdAt desc) {
+  const query = `*[_type == "note" && featured == true && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""] | order(createdAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -79,7 +85,13 @@ export async function getFeaturedNotes(): Promise<Note[]> {
       }
     },
     academicYear,
-    subject,
+    subject->{
+      _id,
+      _type,
+      name,
+      value,
+      description
+    },
     tags,
     featured,
     createdAt,
@@ -91,7 +103,7 @@ export async function getFeaturedNotes(): Promise<Note[]> {
 
 // Get a single note by slug
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
-  const query = `*[_type == "note" && slug.current == "${slug}" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && subject != "" && slug.current != null && slug.current != ""][0] {
+  const query = `*[_type == "note" && slug.current == "${slug}" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""][0] {
     _id,
     title,
     "slug": slug.current,
@@ -110,7 +122,13 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
       }
     },
     academicYear,
-    subject,
+    subject->{
+      _id,
+      _type,
+      name,
+      value,
+      description
+    },
     tags,
     featured,
     createdAt,
@@ -158,17 +176,32 @@ export async function getAcademicYears(): Promise<string[]> {
   return await client.fetch(query);
 }
 
-// Get all unique subjects
-export async function getSubjects(): Promise<string[]> {
-  const query = `*[_type == "note"] | distinct(subject)`;
+// Get all subjects from subject documents
+export async function getSubjects(): Promise<Subject[]> {
+  const query = `*[_type == "subject"] | order(name asc) {
+    _id,
+    _type,
+    name,
+    value,
+    description
+  }`;
   return await client.fetch(query);
+}
+
+// Get all unique subject values (for backward compatibility)
+export async function getSubjectValues(): Promise<string[]> {
+  const query = `*[_type == "subject"] | order(name asc) {
+    value.current
+  }`;
+  const subjects = await client.fetch(query);
+  return subjects.map((s: any) => s.value.current);
 }
 
 // Get all unique subject-year combinations
 export async function getSubjectYearCombinations(): Promise<{academicYear: string, subject: string}[]> {
   const query = `*[_type == "note"] {
     academicYear,
-    subject
+    "subject": subject->value.current
   } | order(academicYear asc, subject asc)`;
   
   const results = await client.fetch(query);
@@ -215,6 +248,34 @@ export function getSubjectLabel(subjectValue: string): string {
   };
   
   return subjectLabels[subjectValue] || subjectValue;
+}
+
+// Helper function to get subject value from subject object
+export function getSubjectValue(subject: Subject | { _ref: string } | undefined): string {
+  if (!subject) return '';
+  
+  // If it's a populated subject object
+  if ('value' in subject && subject.value?.current) {
+    return subject.value.current;
+  }
+  
+  // If it's a reference, we can't get the value without another query
+  // This should be handled by ensuring subjects are populated in queries
+  return '';
+}
+
+// Helper function to get subject name from subject object
+export function getSubjectName(subject: Subject | { _ref: string } | undefined): string {
+  if (!subject) return 'No subject';
+  
+  // If it's a populated subject object
+  if ('name' in subject) {
+    return subject.name;
+  }
+  
+  // If it's a reference, we can't get the name without another query
+  // This should be handled by ensuring subjects are populated in queries
+  return 'Unknown subject';
 }
 
 // Helper function to get year label from value

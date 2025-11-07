@@ -1,3 +1,21 @@
+// Subject reference type
+export interface SubjectReference {
+  _type: 'reference';
+  _ref: string;
+}
+
+// Subject document type
+export interface Subject {
+  _id: string;
+  _type: 'subject';
+  name: string;
+  value: {
+    _type: 'slug';
+    current: string;
+  };
+  description?: string;
+}
+
 // Note types
 export interface Note {
   _id: string;
@@ -18,7 +36,7 @@ export interface Note {
     };
   }[];
   academicYear?: string;
-  subject?: string;
+  subject?: SubjectReference | Subject; // Can be reference or populated subject
   tags?: string[];
   featured?: boolean;
   createdAt?: string;

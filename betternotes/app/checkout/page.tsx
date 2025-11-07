@@ -184,7 +184,12 @@ export default function CheckoutPage() {
                       <div key={item.note._id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
                         <div className="flex-grow">
                           <h3 className="font-semibold text-black mb-1">{item.note.title}</h3>
-                          <p className="text-sm text-gray-600 mb-1">{item.note.subject?.replace('-', ' ') || 'No subject'}</p>
+                          <p className="text-sm text-gray-600 mb-1">
+                            {item.note.subject && '_ref' in item.note.subject
+                              ? 'Loading...' // Reference will be populated on server side
+                              : item.note.subject?.name || 'No subject'
+                            }
+                          </p>
                           <p className="font-medium text-black">৳{item.note.price || 0}</p>
                         </div>
                         
