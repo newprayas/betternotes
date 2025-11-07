@@ -3,7 +3,7 @@ import { Note, DiscountCode, NoteFilters, Subject } from '@/types';
 
 // Get all notes with optional filtering
 export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
-  let query = `*[_type == "note" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""`;
+  let query = `*[_type == "note"`;
   
   if (filters) {
     const conditions = [];
@@ -66,7 +66,7 @@ export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
 
 // Get featured notes
 export async function getFeaturedNotes(): Promise<Note[]> {
-  const query = `*[_type == "note" && featured == true && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""] | order(createdAt desc) {
+  const query = `*[_type == "note" && featured == true] | order(createdAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -103,7 +103,7 @@ export async function getFeaturedNotes(): Promise<Note[]> {
 
 // Get a single note by slug
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
-  const query = `*[_type == "note" && slug.current == "${slug}" && title != null && title != "" && price != null && academicYear != null && academicYear != "" && subject != null && slug.current != null && slug.current != ""][0] {
+  const query = `*[_type == "note" && slug.current == "${slug}"][0] {
     _id,
     title,
     "slug": slug.current,
@@ -307,4 +307,25 @@ export function getYearColorScheme(yearValue: string) {
   };
   
   return colorSchemes[yearValue] || { bg: 'bg-gray-50', border: 'border-gray-500' };
+}
+
+// Helper function to check if a note has all essential fields
+export function hasAllEssentialFields(note: Note): boolean {
+  return !!(
+    note.title &&
+    note.slug &&
+    note.price !== null && note.price !== undefined &&
+    note.academicYear &&
+    note.subject
+  );
+}
+
+// Helper function to get incomplete notes (missing essential fields)
+export function getIncompleteNotes(notes: Note[]): Note[] {
+  return notes.filter(note => !hasAllEssentialFields(note));
+}
+
+// Helper function to get complete notes (has all essential fields)
+export function getCompleteNotes(notes: Note[]): Note[] {
+  return notes.filter(note => hasAllEssentialFields(note));
 }

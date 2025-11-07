@@ -95,7 +95,6 @@ export const noteSchema = {
       title: 'Subject',
       type: 'reference',
       to: [{ type: 'subject' }],
-      validation: (Rule: import('sanity').Rule) => Rule.required(),
     },
     {
       name: 'tags',

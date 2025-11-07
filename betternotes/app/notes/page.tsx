@@ -8,7 +8,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import DynamicNotesSection from '@/components/notes/dynamic-notes-section';
 import { Note, NoteFilters, Subject } from '@/types';
-import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel, getSubjects } from '@/lib/sanity/api';
+import { getNotes, getSubjectYearCombinations, getYearLabel, getYearColorScheme, getSubjectLabel, getSubjects, hasAllEssentialFields, getIncompleteNotes, getCompleteNotes } from '@/lib/sanity/api';
 import { urlFor } from '@/lib/sanity/client';
 import { useCart } from '@/lib/cart-context';
 import { useScroll } from '@/lib/scroll-context';
@@ -24,6 +24,8 @@ const academicYears = [
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const [completeNotes, setCompleteNotes] = useState<Note[]>([]);
+  const [incompleteNotes, setIncompleteNotes] = useState<Note[]>([]);
   const [subjectYearCombinations, setSubjectYearCombinations] = useState<{academicYear: string, subject: string}[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,6 +46,13 @@ export default function NotesPage() {
         ]);
         setNotes(liveNotes);
         setFilteredNotes(liveNotes);
+        
+        // Separate complete and incomplete notes
+        const complete = getCompleteNotes(liveNotes);
+        const incomplete = getIncompleteNotes(liveNotes);
+        setCompleteNotes(complete);
+        setIncompleteNotes(incomplete);
+        
         setSubjectYearCombinations(combinations);
         setSubjects(subjectsData);
       } catch (error) {
@@ -134,8 +143,8 @@ export default function NotesPage() {
   useEffect(() => {
     // Don't apply filters - show all notes always
     // Filters are only used for navigation/highlighting
-    setFilteredNotes(notes);
-  }, [notes]);
+    setFilteredNotes(completeNotes);
+  }, [completeNotes]);
 
   const handleFilterChange = (filterType: keyof NoteFilters, value: string) => {
     setFilters(prev => ({
@@ -261,6 +270,33 @@ export default function NotesPage() {
                   </div>
                 );
               })}
+              
+              {/* NULL Section for Incomplete Notes */}
+              {incompleteNotes.length > 0 && (
+                <div className="mt-16">
+                  <div className="bg-red-50 border-4 border-red-500 p-4 rounded-lg mb-6 inline-block">
+                    <h2 className="text-2xl font-bold text-red-700">NULL</h2>
+                  </div>
+                  <p className="text-gray-600 mb-4">Notes missing essential information</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {incompleteNotes.map((note) => (
+                      <div key={note._id} className="bg-white border-2 border-red-300 rounded-lg p-4 shadow-sm">
+                        <h3 className="font-semibold text-black mb-2">
+                          {note.title || 'Untitled Note'}
+                        </h3>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          {!note.title && <p>❌ Missing title</p>}
+                          {!note.slug && <p>❌ Missing slug</p>}
+                          {note.price === null || note.price === undefined ? <p>❌ Missing price</p> : <p>✅ Price: ৳{note.price}</p>}
+                          {!note.academicYear && <p>❌ Missing academic year</p>}
+                          {!note.subject && <p>❌ Missing subject</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-center py-12">
