@@ -51,17 +51,18 @@ export default function DynamicNotesSection({ notes, academicYear, subject, isEx
               <h3 className="text-xl font-bold">{note.title || 'Untitled Note'}</h3>
             </div>
             
-            <div className="mb-4">
-              <div className="text-base font-semibold text-black mb-1">
-                {note.pageNumber ? `Pages : ${note.pageNumber} +` : 'Page count not available'}
+            <div className="mb-4 space-y-2">
+              <div className="inline-block px-0 py-1 bg-green-50 text-sm font-semibold text-black">
+                {note.pageNumber ? `${note.pageNumber} + pages` : 'N/A'}
               </div>
-              <div className="text-base font-semibold text-black">
+              <br />
+              <div className="inline-block px-0 py-1 bg-green-50 text-sm font-semibold text-black">
                 {note.originalPrice && (
-                  <span className="text-gray-400 line-through mr-1">
-                    ৳{note.originalPrice}
+                  <span className="text-gray-500 line-through mr-1">
+                    {note.originalPrice} tk
                   </span>
                 )}
-                ৳{note.price || 0}
+                {note.price || 0} tk
               </div>
             </div>
             

@@ -280,7 +280,7 @@ export default function NotePage() {
               <div className="mb-2">
                 <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
                   <span className="text-lg font-semibold text-black">
-                    Pages: {note.pageNumber ? `${note.pageNumber} +` : 'Page count not available'}
+                    Pages: {note.pageNumber ? `${note.pageNumber} +` : 'N/A'}
                   </span>
                 </div>
               </div>
@@ -291,10 +291,10 @@ export default function NotePage() {
                   <div className="flex items-center">
                     {note.originalPrice && (
                       <span className="text-gray-400 line-through text-lg mr-2">
-                        ৳{note.originalPrice}
+                        {note.originalPrice} tk
                       </span>
                     )}
-                    <span className="text-lg font-semibold text-black">Price: ৳{note.price || 0}</span>
+                    <span className="text-lg font-semibold text-black">Price: {note.price || 0} tk</span>
                     {note.originalPrice && note.price && (
                       <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
                         {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF

@@ -190,7 +190,7 @@ export default function CheckoutPage() {
                               : item.note.subject?.name || 'No subject'
                             }
                           </p>
-                          <p className="font-medium text-black">৳{item.note.price || 0}</p>
+                          <p className="font-medium text-black">{item.note.price || 0} tk</p>
                         </div>
                         
                         <button
@@ -214,32 +214,32 @@ export default function CheckoutPage() {
                     {cart.items.map((item) => (
                       <div key={item.note._id} className="flex justify-between items-center">
                         <span className="text-gray-700">{item.note.title}</span>
-                        <span className="font-medium">৳{item.note.price || 0}</span>
+                        <span className="font-medium">{item.note.price || 0} tk</span>
                       </div>
                     ))}
                     
                     <div className="border-t border-gray-200 pt-2 mt-2">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-gray-600">Price Before Discount</span>
-                        <span className="font-medium">৳{cart.total}</span>
+                        <span className="font-medium">{cart.total} tk</span>
                       </div>
                       
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-gray-600">Quantity Discount</span>
                         <span className={`font-medium ${(cart.quantityDiscount || 0) > 0 ? 'text-green-600' : 'text-gray-500'}`}>
-                          -৳{cart.quantityDiscount || 0}
+                          -{cart.quantityDiscount || 0} tk
                         </span>
                       </div>
                       {cart.discountCode && (
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-gray-600">Discount ({cart.discountCode})</span>
-                          <span className="font-medium text-green-600">-৳{cart.discountAmount}</span>
+                          <span className="font-medium text-green-600">-{cart.discountAmount} tk</span>
                         </div>
                       )}
                       
                       <div className="flex justify-between items-center">
                         <span className="font-bold">Total</span>
-                        <span className="font-bold">৳{cart.finalTotal}</span>
+                        <span className="font-bold">{cart.finalTotal} tk</span>
                       </div>
                     </div>
                   </div>

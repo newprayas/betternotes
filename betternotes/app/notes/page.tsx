@@ -358,7 +358,7 @@ export default function NotesPage() {
                         <div className="text-sm text-gray-600 space-y-1">
                           {!note.title && <p>❌ Missing title</p>}
                           {!note.slug && <p>❌ Missing slug</p>}
-                          {note.price === null || note.price === undefined ? <p>❌ Missing price</p> : <p>✅ Price: ৳{note.price}</p>}
+                          {note.price === null || note.price === undefined ? <p>❌ Missing price</p> : <p>✅ Price: {note.price} tk</p>}
                           {!note.academicYear && <p>❌ Missing academic year</p>}
                           {!note.subject && <p>❌ Missing subject</p>}
                         </div>
