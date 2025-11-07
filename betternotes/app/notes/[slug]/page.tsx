@@ -280,7 +280,7 @@ export default function NotePage() {
               <div className="mb-2">
                 <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
                   <span className="text-lg font-semibold text-black">
-                    Pages: {note.pageNumber ? note.pageNumber : 'Page count not available'}
+                    Pages: {note.pageNumber ? `${note.pageNumber} +` : 'Page count not available'}
                   </span>
                 </div>
               </div>

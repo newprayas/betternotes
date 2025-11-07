@@ -31,6 +31,8 @@ export default function NotesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<NoteFilters>({});
   const [expandedYear, setExpandedYear] = useState<string | null>(null);
+  const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+  const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart, removeFromCart, cart } = useCart();
   const { saveScrollPosition, restoreScrollPosition } = useScroll();
@@ -168,6 +170,30 @@ export default function NotesPage() {
     }
   };
 
+  const toggleYearExpansion = (year: string) => {
+    setExpandedYears(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(year)) {
+        newSet.delete(year);
+      } else {
+        newSet.add(year);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSubjectExpansion = (subjectKey: string) => {
+    setExpandedSubjects(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(subjectKey)) {
+        newSet.delete(subjectKey);
+      } else {
+        newSet.add(subjectKey);
+      }
+      return newSet;
+    });
+  };
+
   const handleSubjectClick = (academicYear: string, subject: string) => {
     setFilters({ academicYear, subject });
     const element = document.getElementById(`${academicYear}-${subject}`);
@@ -215,6 +241,11 @@ export default function NotesPage() {
               ))}
             </div>
             
+            {/* Red divider line between subject and year filters */}
+            {expandedYear && (
+              <div className="w-1/3 h-1 bg-red-600 mb-6 rounded-full"></div>
+            )}
+            
             {/* Subject Pills - Show when year is expanded */}
             {expandedYear && groupedByYear[expandedYear] && (
               <div className="flex flex-wrap gap-2 mb-6">
@@ -254,19 +285,35 @@ export default function NotesPage() {
                 
                 return (
                   <div key={year}>
-                    <div className="bg-white border-4 border-black p-4 rounded-lg mb-6 inline-block">
+                    <button
+                      onClick={() => toggleYearExpansion(year)}
+                      className="flex items-center justify-between bg-white border-4 border-black p-4 rounded-lg mb-6 transition-all w-full max-w-fit hover:bg-gray-50"
+                    >
                       <h2 className="text-2xl font-bold text-black">{yearLabel}</h2>
-                    </div>
+                      <svg
+                        className={`w-8 h-8 transition-transform ml-2 ${expandedYears.has(year) ? 'rotate-90' : ''}`}
+                        fill="none"
+                        stroke="red"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                     
-                    {/* Dynamic Subject Sections */}
-                    {subjects.map(subject => (
-                      <DynamicNotesSection
-                        key={`${year}-${subject}`}
-                        notes={filteredNotes}
-                        academicYear={year}
-                        subject={subject}
-                      />
-                    ))}
+                    {/* Dynamic Subject Sections - Only show if year is expanded */}
+                    {expandedYears.has(year) && subjects.map(subject => {
+                      const subjectKey = `${year}-${subject}`;
+                      return (
+                        <DynamicNotesSection
+                          key={subjectKey}
+                          notes={filteredNotes}
+                          academicYear={year}
+                          subject={subject}
+                          isExpanded={expandedSubjects.has(subjectKey)}
+                          onToggleExpansion={() => toggleSubjectExpansion(subjectKey)}
+                        />
+                      );
+                    })}
                   </div>
                 );
               })}

@@ -11,9 +11,11 @@ interface DynamicNotesSectionProps {
   notes: Note[];
   academicYear: string;
   subject: string;
+  isExpanded?: boolean;
+  onToggleExpansion?: () => void;
 }
 
-export default function DynamicNotesSection({ notes, academicYear, subject }: DynamicNotesSectionProps) {
+export default function DynamicNotesSection({ notes, academicYear, subject, isExpanded = true, onToggleExpansion }: DynamicNotesSectionProps) {
   const { addToCart, removeFromCart, cart } = useCart();
   const { saveScrollPosition } = useScroll();
   const subjectLabel = getSubjectLabel(subject);
@@ -27,10 +29,22 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
 
   return (
     <div id={`${academicYear}-${subject}`} className="mb-8 scroll-mt-24">
-      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-4 border-yellow-400 p-3 rounded-lg mb-4 inline-block">
-        <h3 className="text-lg font-bold text-gray-800">{subjectLabel}</h3>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <button
+        onClick={onToggleExpansion}
+        className="flex items-center justify-between bg-red-600 text-white px-6 py-3 rounded-full mb-4 transition-all w-full max-w-fit hover:bg-red-700"
+      >
+        <h3 className="text-lg font-bold">{subjectLabel}</h3>
+        <svg
+          className={`w-6 h-6 transition-transform ml-2 ${isExpanded ? 'rotate-90' : ''}`}
+          fill="none"
+          stroke="white"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      {isExpanded && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNotes.map((note) => (
           <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-3">
@@ -39,7 +53,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
             
             <div className="mb-4">
               <div className="text-base font-semibold text-black mb-1">
-                {note.pageNumber ? `${note.pageNumber} Pages` : 'Page count not available'}
+                {note.pageNumber ? `Pages : ${note.pageNumber} +` : 'Page count not available'}
               </div>
               <div className="text-base font-semibold text-black">
                 {note.originalPrice && (
@@ -90,7 +104,8 @@ export default function DynamicNotesSection({ notes, academicYear, subject }: Dy
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
