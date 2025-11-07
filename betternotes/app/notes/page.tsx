@@ -196,10 +196,33 @@ export default function NotesPage() {
 
   const handleSubjectClick = (academicYear: string, subject: string) => {
     setFilters({ academicYear, subject });
-    const element = document.getElementById(`${academicYear}-${subject}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Auto-expand the year header if it's not already expanded
+    if (!expandedYears.has(academicYear)) {
+      setExpandedYears(prev => {
+        const newSet = new Set(prev);
+        newSet.add(academicYear);
+        return newSet;
+      });
     }
+    
+    // Auto-expand the subject header
+    const subjectKey = `${academicYear}-${subject}`;
+    if (!expandedSubjects.has(subjectKey)) {
+      setExpandedSubjects(prev => {
+        const newSet = new Set(prev);
+        newSet.add(subjectKey);
+        return newSet;
+      });
+    }
+    
+    // Scroll to the subject section after a short delay to allow for expansion
+    setTimeout(() => {
+      const element = document.getElementById(`${academicYear}-${subject}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   // Group combinations by academic year
@@ -277,7 +300,7 @@ export default function NotesPage() {
           {isLoading ? (
             <div className="text-center py-12">Loading notes...</div>
           ) : filteredNotes.length > 0 ? (
-            <div className="space-y-12">
+            <div className="space-y-6">
               {/* Dynamic Year Sections */}
               {Object.entries(groupedByYear).map(([year, subjects]) => {
                 const yearColors = getYearColorScheme(year);
@@ -287,7 +310,7 @@ export default function NotesPage() {
                   <div key={year}>
                     <button
                       onClick={() => toggleYearExpansion(year)}
-                      className="flex items-center justify-between bg-white border-4 border-black p-4 rounded-lg mb-6 transition-all w-full max-w-fit hover:bg-gray-50"
+                      className="flex items-center justify-between bg-white text-black px-6 py-3 rounded-full mb-6 transition-all w-full max-w-fit hover:bg-gray-50 border-4 border-red-600"
                     >
                       <h2 className="text-2xl font-bold text-black">{yearLabel}</h2>
                       <svg
