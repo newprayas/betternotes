@@ -14,7 +14,7 @@ import {
   X,
   Copy
 } from 'lucide-react';
-import Header from '@/commponents/layout/header';
+import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import PromotionalOffers from '@/components/checkout/promotional-offers';
 import { useCart } from '@/lib/cart-context';
@@ -212,9 +212,9 @@ export default function CheckoutPage() {
                   
                   <div className="space-y-2 mb-6">
                     {cart.items.map((item) => (
-                      <div key={item.note._id} className="flex justify-between items-center">
-                        <span className="text-gray-700">{item.note.title}</span>
-                        <span className="font-medium">{item.note.price || 0} tk</span>
+                      <div key={item.note._id} className="flex justify-between items-start">
+                        <span className="text-gray-700 flex-1 mr-2 break-words">{item.note.title}</span>
+                        <span className="font-medium flex-shrink-0">{item.note.price || 0} tk</span>
                       </div>
                     ))}
                     
@@ -271,10 +271,11 @@ export default function CheckoutPage() {
                         />
                         <div>
                           <span className="text-sm font-medium text-gray-700">
-                            Please recheck your email 🎉 - Your notes will be sent to this gmail - ensure it is correct.
+                            Please recheck your Gmail 🎉<br />
+                            Your notes will be sent to this gmail - make sure it is correct.
                           </span>
                           <p className="text-xs text-red-600 font-medium mt-1">
-                            I HAVE RE-CHECKED MY EMAIL and IT IS CORRECT
+                            I HAVE RE-CHECKED MY Gmail and IT IS CORRECT
                           </p>
                         </div>
                       </label>
@@ -293,7 +294,8 @@ export default function CheckoutPage() {
                         />
                         <div>
                           <span className="text-sm font-medium text-gray-700">
-                            Please take a screenshot of the order summary (the total amount) 🎉 - We need it to send you the notes.
+                            Please take a screenshot of the order summary (the total amount) 🎉<br />
+                            We need this screnshot to send you notes
                           </span>
                           <p className="text-xs text-red-600 font-medium mt-1">
                             YES I HAVE TAKEN THE SCREENSHOT
