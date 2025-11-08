@@ -1,0 +1,14 @@
+{
+  "name": "better-notes-v2-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "cd betternotes && npm install",
+    "build": "cd betternotes && npm run build",
+    "dev": "cd betternotes && npm run dev",
+    "start": "cd betternotes && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
