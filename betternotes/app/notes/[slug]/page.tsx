@@ -343,29 +343,29 @@ export default function NotePage() {
                 </p>
               </div>
 
-              {/* Pages Info - Prominent Display */}
+              {/* Pages Info - Smaller Display */}
               {note.pageNumber && (
                 <div className="mb-2">
-                  <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
-                    <span className="text-lg font-semibold text-black">
+                  <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg inline-block">
+                    <span className="text-sm font-medium text-black">
                       Pages: {note.pageNumber} +
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* Price Info - Same styling as Pages */}
+              {/* Price Info - Smaller styling */}
               <div className="mb-6">
-                <div className="bg-green-100 border border-green-300 px-4 py-2 rounded-lg inline-block">
+                <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-lg inline-block">
                   <div className="flex items-center">
                     {note.originalPrice && (
-                      <span className="text-gray-400 line-through text-lg mr-2">
+                      <span className="text-gray-400 line-through text-sm mr-2">
                         {note.originalPrice} tk
                       </span>
                     )}
-                    <span className="text-lg font-semibold text-black">Price: {note.price || 0} tk</span>
+                    <span className="text-sm font-medium text-black">Price: {note.price || 0} tk</span>
                     {note.originalPrice && note.price && (
-                      <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded">
+                      <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">
                         {Math.round(((note.originalPrice - note.price) / note.originalPrice) * 100)}% OFF
                       </span>
                     )}

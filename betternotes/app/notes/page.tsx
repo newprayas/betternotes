@@ -465,7 +465,7 @@ export default function NotesPage() {
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-black mb-2">All Notes</h1>
-            <p className="text-gray-600">Browse our comprehensive collection of medical notes</p>
+            <p className="text-gray-600">🎉 Choose the notes you want form the list ❤️</p>
           </div>
 
           {/* Year Pills Filter */}
