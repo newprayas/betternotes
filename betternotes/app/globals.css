@@ -88,26 +88,24 @@ body {
 .btn-gradient-border {
   position: relative;
   background: var(--btn-bg, rgb(250, 204, 21)); /* yellow-400 */
-  padding: 1rem 2.5rem;
-  border-radius: 0.75rem;
-  font-weight: 900;
-  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-weight: 400;
+  font-size: 2rem;
   letter-spacing: 0.05em;
   color: black;
   transition: all 0.3s ease;
   text-transform: uppercase;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
-  font-family: "Alkatra", system-ui;
-  font-optical-sizing: auto;
-  font-style: normal;
+  font-family: "Bebas Neue", sans-serif;
 }
 
 .btn-gradient-border::before {
   content: '';
   position: absolute;
   inset: -6px;
-  border-radius: 0.75rem;
+  border-radius: 0;
   padding: 6px;
   background: conic-gradient(
     from var(--gradient-angle),
@@ -141,6 +139,13 @@ body {
   .container {
     @apply max-w-screen-md;
   }
+}
+
+/* Font classes */
+.bebas-neue-regular {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 @media (min-width: 1024px) {

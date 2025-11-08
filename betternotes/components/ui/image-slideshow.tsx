@@ -1,20 +1,74 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { getActiveSlideshow } from '@/lib/sanity/api';
+import { urlFor } from '@/lib/sanity/client';
+import { Slideshow, SlideshowImage } from '@/types';
 
 const ImageSlideshow = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [slideshow, setSlideshow] = useState<Slideshow | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentAspectRatio, setCurrentAspectRatio] = useState(16/9); // Default fallback
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Placeholder images - using empty divs with gray backgrounds as requested
-  const images = Array(5).fill(null);
+  // Helper function to calculate aspect ratio from image metadata
+  const getAspectRatio = (image: SlideshowImage): number => {
+    if (image?.asset?.metadata?.dimensions) {
+      const { width, height } = image.asset.metadata.dimensions;
+      if (width && height) {
+        return width / height;
+      }
+    }
+    // Fallback to common aspect ratios if metadata is not available
+    return 16/9; // Default landscape fallback
+  };
 
+  // Helper function to determine if image is portrait
+  const isPortraitImage = (image: SlideshowImage): boolean => {
+    if (image?.asset?.metadata?.dimensions) {
+      const { width, height } = image.asset.metadata.dimensions;
+      if (width && height) {
+        return height > width;
+      }
+    }
+    return false; // Default to landscape if metadata is not available
+  };
+
+  // Fetch slideshow data from Sanity
   useEffect(() => {
-    if (!isPaused) {
+    async function fetchSlideshow() {
+      try {
+        const slideshowData = await getActiveSlideshow();
+        setSlideshow(slideshowData);
+      } catch (error) {
+        console.error("Failed to fetch slideshow:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchSlideshow();
+  }, []);
+
+  // Update aspect ratio when current image changes
+  useEffect(() => {
+    const images = slideshow?.images || [];
+    if (images.length > 0 && currentImageIndex < images.length) {
+      const currentImage = images[currentImageIndex];
+      const aspectRatio = getAspectRatio(currentImage);
+      setCurrentAspectRatio(aspectRatio);
+    }
+  }, [currentImageIndex, slideshow?.images]);
+
+  // Auto-advance slideshow
+  useEffect(() => {
+    const images = slideshow?.images || [];
+    if (!isPaused && images.length > 0) {
       intervalRef.current = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 2800); // Change image every 2 seconds
+      }, 2800); // Change image every 2.8 seconds
     }
 
     return () => {
@@ -22,7 +76,7 @@ const ImageSlideshow = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPaused, images.length]);
+  }, [isPaused, slideshow?.images?.length]);
 
   const handleMouseEnter = () => {
     setIsPaused(true);
@@ -40,9 +94,39 @@ const ImageSlideshow = () => {
     setIsPaused(false);
   };
 
+  const images = slideshow?.images || [];
+
+  if (isLoading) {
+    return (
+      <div className="relative w-11/12 md:w-4/5 lg:w-3/4 overflow-hidden bg-black rounded-lg mx-auto" style={{ aspectRatio: currentAspectRatio }}>
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (images.length === 0) {
+    return (
+      <div className="relative w-11/12 md:w-4/5 lg:w-3/4 overflow-hidden bg-black rounded-lg mx-auto" style={{ aspectRatio: currentAspectRatio }}>
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-2"></div>
+            <p>No slideshow images available</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      className="relative w-11/12 md:w-4/5 lg:w-3/4 h-[28rem] md:h-[40rem] overflow-hidden bg-gray-100 rounded-lg mx-auto"
+      className={`relative overflow-hidden bg-black rounded-lg mx-auto transition-all duration-500 ease-in-out ${
+        images[currentImageIndex] && isPortraitImage(images[currentImageIndex])
+          ? 'max-w-lg'
+          : 'w-11/12 md:w-4/5 lg:w-3/4'
+      }`}
+      style={{ aspectRatio: currentAspectRatio }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -50,15 +134,42 @@ const ImageSlideshow = () => {
     >
       <div className="flex h-full transition-transform duration-500 ease-in-out"
            style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
-        {images.map((_, index) => (
-          <div 
-            key={index}
-            className="w-full h-full flex-shrink-0 flex items-center justify-center bg-gray-200"
+        {images.map((image: SlideshowImage, index: number) => (
+          <div
+            key={image._key || index}
+            className="w-full h-full flex-shrink-0 relative"
           >
-            <div className="text-gray-400 text-center">
-              <div className="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-2"></div>
-              <p>Image {index + 1}</p>
-            </div>
+            {image?.asset ? (
+              <>
+                <Image
+                  src={urlFor(image)
+                    .width(isPortraitImage(image) ? 600 : 1200)
+                    .height(isPortraitImage(image) ? 900 : 800)
+                    .fit(isPortraitImage(image) ? "clip" : "fill")
+                    .url()}
+                  alt={image.alt || `Slideshow image ${index + 1}`}
+                  fill
+                  className={`object-${isPortraitImage(image) ? "contain" : "cover"}`}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 75vw"
+                  priority={index === 0}
+                  style={{
+                    objectPosition: isPortraitImage(image) ? 'center top' : 'center'
+                  }}
+                />
+                {image.caption && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-4">
+                    <p className="text-center">{image.caption}</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <div className="text-gray-400 text-center">
+                  <div className="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-2"></div>
+                  <p>Image {index + 1}</p>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -69,7 +180,7 @@ const ImageSlideshow = () => {
           <button
             key={index}
             className={`w-2 h-2 rounded-full transition-colors ${
-              index === currentImageIndex ? 'bg-black' : 'bg-gray-400'
+              index === currentImageIndex ? 'bg-white' : 'bg-white/50'
             }`}
             onClick={() => setCurrentImageIndex(index)}
           />

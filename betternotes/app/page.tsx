@@ -66,7 +66,7 @@ export default async function Home() {
         </section>
 
         {/* Need Guidance Section */}
-        <section className="py-12 md:py-16 bg-gradient-to-b from-blue-50 to-purple-50 rounded-3xl mx-4 md:mx-8">
+        <section className="py-12 md:py-8 bg-gradient-to-b from-blue-50 to-purple-50 rounded-3xl mx-4 md:mx-8">
           <div className="container">
             <div className="max-w-4xl mx-auto">
               <div className="text-center">
@@ -86,32 +86,31 @@ export default async function Home() {
                   
                 
                   
-                  <div className="text-left bg-yellow-50 rounded-lg p-6 mb-8">
+                  <div className="bg-yellow-50 rounded-lg p-6 mb-8 text-center">
                     <h4 className="text-lg font-bold text-black mb-4">Tips on</h4>
-                    <ul className="space-y-3 text-gray-700">
-                      <li className="flex items-start">
-                        <span className="text-black mr-2">🎯</span>
-                        <span>How to study? To understand and do well in exams ✨</span>
+                    <ul className="space-y-3 text-gray-700 text-center">
+                      <li className="flex flex-col items-center justify-center">
+                        <span className="mb-1">🎯 How to study?</span>
+                        <span>To understand and do well in exams ✨</span>
                       </li>
-                      <li className="flex items-start">
-                        <span className="text-black mr-2">🎯</span>
-                        <span>Which questions come during exams? To focus on what matters. ✨ </span>
+                      <li className="flex flex-col items-center justify-center">
+                        <span className="mb-1">🎯 Which questions come during exams?</span>
+                        <span>To focus on what matters. ✨</span>
                       </li>
-                      <li className="flex items-start">
-                        <span className="text-black mr-2">🎯</span>
-                        <span>How to answer in exams? The best practices ✨ </span>
+                      <li className="flex flex-col items-center justify-center">
+                        <span className="mb-1">🎯 How to answer in exams?</span>
+                        <span>The best practices ✨</span>
                       </li>
-                      <li className="flex items-start">
-                        <span className="text-black mr-2">🎯</span>
-                        <span>What to focus on for exams? What to skip? To study effiecntly ✨</span>
+                      <li className="flex flex-col items-center justify-center">
+                        <span className="mb-1">🎯 What to focus on for exams? What to skip?</span>
+                        <span>To study effiecntly ✨</span>
                       </li>
-                        <li className="flex items-start">
-                        <span className="text-black mr-2">🎯</span>
-                        <span>What resources I use in my own studies? To make studing EASIER and enjoyable ✨</span>
+                      <li className="flex flex-col items-center justify-center">
+                        <span className="mb-1">🎯 What resources I use in my own studies?</span>
+                        <span>To make studing EASIER and enjoyable ✨</span>
                       </li>
-                      <li className="flex items-start">
-                        <span className="text-black mr-2">🥳</span>
-                        <span>And MORE! 🎉 </span>
+                      <li className="flex items-center justify-center">
+                        <span>And MORE! 🎉</span>
                       </li>
                     </ul>
                   </div>
@@ -189,7 +188,8 @@ export default async function Home() {
         {/* Image Slideshow Section */}
         <section className="py-12 md:py-16 bg-gray-50">
           <div className="container">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-black mb-8">🎉 SAMPLES 🎉</h2>
               <ImageSlideshow />
             </div>
           </div>
@@ -198,7 +198,7 @@ export default async function Home() {
         {/* CTA Section */}
         <section className="py-12 md:py-16 bg-black text-white">
           <div className="container text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Supercharge your studies?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">SUPERCHARGE YOUR STUDIES</h2>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               Check out these notes I have made with many years of hardwork and passsion for my own exam preperation ❤️
               <br />

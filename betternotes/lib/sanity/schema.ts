@@ -209,3 +209,78 @@ export const subjectSchema = {
     },
   },
 };
+
+// Slideshow schema for Sanity CMS
+export const slideshowSchema = {
+  name: 'slideshow',
+  title: '🎠 Slideshow Images',
+  type: 'document',
+  fields: [
+    {
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      description: 'Optional title for this slideshow collection',
+    },
+    {
+      name: 'images',
+      title: '📸 Slideshow Images',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            {
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe the image for accessibility and SEO',
+            },
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'text',
+              description: 'Optional caption to display with the image',
+            },
+          ],
+          preview: {
+            select: {
+              title: 'alt',
+              media: 'asset',
+            },
+            prepare: (selection: { title?: string; media?: any }) => ({
+              title: selection.title || 'Untitled Image',
+              media: selection.media,
+            }),
+          },
+        },
+      ],
+      options: {
+        layout: 'grid',
+        addNewButton: '+ Add Slideshow Image',
+      },
+      description: '🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard. These images will be displayed in the homepage slideshow.',
+    },
+    {
+      name: 'isActive',
+      title: 'Active',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Whether this slideshow is currently active and should be displayed',
+    },
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      imageCount: 'images',
+      isActive: 'isActive',
+    },
+    prepare: (selection: { title?: string; imageCount?: any[]; isActive?: boolean }) => ({
+      title: selection.title || 'Untitled Slideshow',
+      subtitle: `${selection.imageCount?.length || 0} images - ${selection.isActive ? 'Active' : 'Inactive'}`,
+    }),
+  },
+};

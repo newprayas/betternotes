@@ -230,7 +230,7 @@ export default function NotePage() {
             <div>
               {note.images && note.images.length > 0 ? (
                 <div>
-                  <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                  <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4', maxWidth: '400px', margin: '0 auto' }}>
                     {note.images[currentImageIndex]?.asset ? (
                       <Image
                         src={urlFor(note.images[currentImageIndex]).width(800).url()}
@@ -275,23 +275,23 @@ export default function NotePage() {
                   
                   {/* Thumbnail Gallery */}
                   {note.images && note.images.length > 1 && (
-                    <div className="flex gap-2 mt-4 overflow-x-auto">
+                    <div className="flex gap-2 mt-4 overflow-x-auto justify-center">
                       {note.images.map((image, index) => (
                         <button
                           key={index}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                          className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                             index === currentImageIndex ? 'border-yellow-400' : 'border-gray-200'
                           }`}
                         >
                           <div className="relative w-full h-full">
                             {image?.asset ? (
                               <Image
-                                src={urlFor(image).width(80).height(80).url()}
+                                src={urlFor(image).width(64).height(64).url()}
                                 alt={`${note.title} - Page ${index + 1}`}
                                 fill
                                 className="object-cover"
-                                sizes="80px"
+                                sizes="64px"
                                 onError={(e) => {
                                   console.error("Thumbnail failed to load:", e);
                                   console.error("Thumbnail URL:", urlFor(image).width(80).height(80).url());
@@ -309,7 +309,7 @@ export default function NotePage() {
                   )}
                 </div>
               ) : (
-                <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '3/4', maxWidth: '400px', margin: '0 auto' }}>
                   <div className="w-full h-full bg-gray-200 flex flex-col items-center justify-center text-center p-4">
                     <BookOpen className="w-24 h-24 text-gray-400 mb-4" />
                     <p className="text-gray-500 font-semibold">No preview available</p>

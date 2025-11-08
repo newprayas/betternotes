@@ -88,6 +88,30 @@ export interface NoteFilters {
   search?: string;
 }
 
+// Slideshow types
+export interface SlideshowImage {
+  _key?: string;
+  _type: string;
+  asset?: {
+    _id: string;
+    _type: string;
+    url?: string;
+    metadata?: any;
+  };
+  alt?: string;
+  caption?: string;
+}
+
+export interface Slideshow {
+  _id: string;
+  _type: 'slideshow';
+  title?: string;
+  images?: SlideshowImage[];
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Contact information
 export interface ContactInfo {
   telegram: string;

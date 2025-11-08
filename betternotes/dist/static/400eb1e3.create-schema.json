@@ -1,0 +1,340 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "price",
+        "type": "number"
+      },
+      {
+        "name": "originalPrice",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "pageNumber",
+        "type": "number"
+      },
+      {
+        "options": {
+          "layout": "grid",
+          "addNewButton": "+ Add Image"
+        },
+        "description": "🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "description": "Describe the image for accessibility and SEO",
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array",
+        "title": "📸 Images"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Third Year",
+              "value": "third-year"
+            },
+            {
+              "title": "Fourth Year",
+              "value": "fourth-year"
+            },
+            {
+              "title": "Fifth Year",
+              "value": "fifth-year"
+            }
+          ]
+        },
+        "name": "academicYear",
+        "type": "string"
+      },
+      {
+        "to": [
+          {
+            "type": "subject"
+          }
+        ],
+        "name": "subject",
+        "type": "reference"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean"
+      }
+    ],
+    "name": "note",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "code",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              },
+              {
+                "flag": "max",
+                "constraint": 100
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "discountPercentage",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "validFrom",
+        "type": "datetime"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "validUntil",
+        "type": "datetime"
+      },
+      {
+        "initialValue": true,
+        "name": "isActive",
+        "type": "boolean"
+      },
+      {
+        "name": "usageLimit",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "name": "usedCount",
+        "type": "number"
+      }
+    ],
+    "name": "discountCode",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Subject Name"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "value",
+        "type": "slug",
+        "title": "Value (for URLs)"
+      },
+      {
+        "description": "Optional description of the subject",
+        "name": "description",
+        "type": "text"
+      }
+    ],
+    "name": "subject",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "Optional title for this slideshow collection",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "layout": "grid",
+          "addNewButton": "+ Add Slideshow Image"
+        },
+        "description": "🎯 **PRO TIP**: Select multiple image files on your computer and drag them here all at once! You can also paste images from clipboard. These images will be displayed in the homepage slideshow.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "description": "Describe the image for accessibility and SEO",
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              },
+              {
+                "description": "Optional caption to display with the image",
+                "name": "caption",
+                "type": "text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array",
+        "title": "📸 Slideshow Images"
+      },
+      {
+        "initialValue": true,
+        "description": "Whether this slideshow is currently active and should be displayed",
+        "name": "isActive",
+        "type": "boolean",
+        "title": "Active"
+      }
+    ],
+    "name": "slideshow",
+    "type": "document",
+    "title": "🎠 Slideshow Images"
+  }
+]

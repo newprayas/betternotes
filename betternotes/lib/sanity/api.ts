@@ -1,5 +1,5 @@
 import { client } from './client';
-import { Note, DiscountCode, NoteFilters, Subject } from '@/types';
+import { Note, DiscountCode, NoteFilters, Subject, Slideshow } from '@/types';
 
 // Get all notes with optional filtering
 export async function getNotes(filters?: NoteFilters): Promise<Note[]> {
@@ -328,4 +328,30 @@ export function getIncompleteNotes(notes: Note[]): Note[] {
 // Helper function to get complete notes (has all essential fields)
 export function getCompleteNotes(notes: Note[]): Note[] {
   return notes.filter(note => hasAllEssentialFields(note));
+}
+
+// Get active slideshow images
+export async function getActiveSlideshow(): Promise<Slideshow | null> {
+  const query = `*[_type == "slideshow" && isActive == true][0] {
+    _id,
+    _type,
+    title,
+    images[]{
+      _key,
+      _type,
+      asset->{
+        _id,
+        _type,
+        url,
+        metadata
+      },
+      alt,
+      caption
+    },
+    isActive,
+    createdAt,
+    updatedAt
+  }`;
+  
+  return await client.fetch(query);
 }
