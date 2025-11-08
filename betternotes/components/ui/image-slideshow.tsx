@@ -16,14 +16,11 @@ const ImageSlideshow = () => {
 
   // Helper function to calculate aspect ratio from image metadata
   const getAspectRatio = (image: SlideshowImage): number => {
-    if (image?.asset?.metadata?.dimensions) {
-      const { width, height } = image.asset.metadata.dimensions;
-      if (width && height) {
-        return width / height;
-      }
+    // Use standardized aspect ratios for perfect display
+    if (isPortraitImage(image)) {
+      return 800 / 1000; // 4:5 ratio for portrait images (reduced size)
     }
-    // Fallback to common aspect ratios if metadata is not available
-    return 16/9; // Default landscape fallback
+    return 1920 / 1080; // 16:9 ratio for landscape images
   };
 
   // Helper function to determine if image is portrait
@@ -143,17 +140,17 @@ const ImageSlideshow = () => {
               <>
                 <Image
                   src={urlFor(image)
-                    .width(isPortraitImage(image) ? 600 : 1200)
-                    .height(isPortraitImage(image) ? 900 : 800)
-                    .fit(isPortraitImage(image) ? "clip" : "fill")
+                    .width(isPortraitImage(image) ? 800 : 1920)
+                    .height(isPortraitImage(image) ? 1000 : 1080)
+                    .fit("fill")
                     .url()}
                   alt={image.alt || `Slideshow image ${index + 1}`}
                   fill
-                  className={`object-${isPortraitImage(image) ? "contain" : "cover"}`}
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 75vw"
                   priority={index === 0}
                   style={{
-                    objectPosition: isPortraitImage(image) ? 'center top' : 'center'
+                    objectPosition: 'center'
                   }}
                 />
                 {image.caption && (
