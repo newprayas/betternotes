@@ -5,7 +5,8 @@ This guide will help you deploy your BetterNotes application to Vercel using a n
 ## Current Status
 - Your project is already initialized with Git
 - The current remote repository is: `https://github.com/newprayas/better-notes-v2.git`
-- Vercel configuration has been updated for direct deployment
+- Vercel configuration has been updated for the correct project structure
+- The Next.js app is located in the `betternotes/` subdirectory
 
 ## Step 1: Create a New GitHub Repository
 
