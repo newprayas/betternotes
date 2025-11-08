@@ -47,22 +47,20 @@ export default function DynamicNotesSection({ notes, academicYear, subject, isEx
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredNotes.map((note) => (
           <div key={note._id} className="card p-6 hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
               <h3 className="text-xl font-bold">{note.title || 'Untitled Note'}</h3>
-            </div>
-            
-            <div className="mb-4 space-y-2">
-              <div className="inline-block px-0 py-1 bg-green-50 text-sm font-semibold text-black">
-                {note.pageNumber ? `${note.pageNumber} + pages` : 'N/A'}
-              </div>
-              <br />
-              <div className="inline-block px-0 py-1 bg-green-50 text-sm font-semibold text-black">
-                {note.originalPrice && (
-                  <span className="text-gray-500 line-through mr-1">
-                    {note.originalPrice} tk
-                  </span>
-                )}
-                {note.price || 0} tk
+              <div className="flex items-center gap-2 sm:gap-3 text-sm">
+                <div className="bg-green-50 px-2 py-1 font-semibold text-black whitespace-nowrap">
+                  {note.pageNumber ? `${note.pageNumber} pages` : 'N/A'}
+                </div>
+                <div className="bg-green-50 px-2 py-1 font-semibold text-black whitespace-nowrap">
+                  {note.originalPrice && (
+                    <span className="text-gray-500 line-through mr-1">
+                      {note.originalPrice} tk
+                    </span>
+                  )}
+                  {note.price || 0} tk
+                </div>
               </div>
             </div>
             
