@@ -17,7 +17,7 @@ interface DynamicNotesSectionProps {
 
 export default function DynamicNotesSection({ notes, academicYear, subject, isExpanded = true, onToggleExpansion }: DynamicNotesSectionProps) {
   const { addToCart, removeFromCart, cart } = useCart();
-  const { saveScrollPosition } = useScroll();
+  const { saveNotesPageState } = useScroll();
   const subjectLabel = getSubjectLabel(subject);
 
   // Filter notes for this specific year and subject
@@ -72,10 +72,7 @@ export default function DynamicNotesSection({ notes, academicYear, subject, isEx
                 className="bg-white border-2 border-red-600 text-black px-3 py-1.5 rounded-lg font-bold text-center hover:bg-red-50 transition-colors text-sm"
                 onClick={() => {
                   // Save current scroll position when clicking "See Sample"
-                  saveScrollPosition('notes-page', {
-                    x: window.scrollX,
-                    y: window.scrollY
-                  });
+                  // This will be handled by the parent component
                 }}
               >
                 See Sample

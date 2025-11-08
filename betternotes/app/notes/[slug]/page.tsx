@@ -30,7 +30,6 @@ export default function NotePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const { addToCart, removeFromCart, cart } = useCart();
-  const { saveScrollPosition } = useScroll();
 
   // Fetch the note data based on the slug
   useEffect(() => {
@@ -51,6 +50,75 @@ export default function NotePage() {
       }
     }
     fetchNote();
+  }, [slug]);
+
+  // Always start at top for view details page
+  useEffect(() => {
+    console.log('[DETAIL-PAGE] Forcing scroll to top', {
+      slug,
+      initialScrollY: window.scrollY,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Force scroll to top immediately
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    console.log('[DETAIL-PAGE] Immediate scroll to top applied', {
+      afterScrollY: window.scrollY
+    });
+    
+    // Double-check after a short delay to ensure it's at top
+    const timeoutId1 = setTimeout(() => {
+      if (window.scrollY !== 0) {
+        console.log('[DETAIL-PAGE] Scroll not at 0 after 100ms, forcing again', {
+          currentScrollY: window.scrollY
+        });
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      } else {
+        console.log('[DETAIL-PAGE] Scroll successfully at 0 after 100ms');
+      }
+    }, 100);
+    
+    // Final check after a longer delay
+    const timeoutId2 = setTimeout(() => {
+      if (window.scrollY !== 0) {
+        console.log('[DETAIL-PAGE] Final scroll correction needed', {
+          currentScrollY: window.scrollY
+        });
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      } else {
+        console.log('[DETAIL-PAGE] Scroll position confirmed at 0');
+      }
+    }, 300);
+    
+    return () => {
+      clearTimeout(timeoutId1);
+      clearTimeout(timeoutId2);
+    };
+  }, [slug]);
+
+  // Save current path before unmounting
+  useEffect(() => {
+    // Set the current path as previous path when the detail page loads
+    const currentPath = `/notes/${slug}`;
+    console.log('[DETAIL-PAGE] Setting previous path for navigation tracking', {
+      currentPath,
+      timestamp: new Date().toISOString()
+    });
+    sessionStorage.setItem('previous-path', currentPath);
+    
+    return () => {
+      console.log('[DETAIL-PAGE] Unmounting, previous path already set', {
+        currentPath,
+        timestamp: new Date().toISOString()
+      });
+    };
   }, [slug]);
 
   const handleAddToCart = () => {
@@ -150,7 +218,6 @@ export default function NotePage() {
           <div className="mb-6">
             <Link
               href="/notes"
-              scroll={false}
               className="flex items-center text-gray-600 hover:text-black transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

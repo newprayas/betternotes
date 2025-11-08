@@ -35,7 +35,10 @@ export default function NotesPage() {
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart, removeFromCart, cart } = useCart();
-  const { saveScrollPosition, restoreScrollPosition } = useScroll();
+  const { saveNotesPageState, getNotesPageState, clearNotesPageState, shouldPreserveScroll, restoreScrollPosition } = useScroll();
+  const [hasRestored, setHasRestored] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [restorationLock, setRestorationLock] = useState(false);
 
   // Fetch data from Sanity when the component mounts
   useEffect(() => {
@@ -66,81 +69,281 @@ export default function NotesPage() {
     fetchData();
   }, []);
 
-  // Save scroll position when leaving the page
-  useEffect(() => {
-    const handleScroll = () => {
-      saveScrollPosition('notes-page', {
-        x: window.scrollX,
-        y: window.scrollY
+  // Save expanded states when they change - moved outside useEffect to fix scoping
+  const saveExpandedStates = () => {
+    // Block all saves during restoration to prevent corruption
+    if (hasRestored || isRestoring || restorationLock) {
+      console.log('[NOTES-PAGE] Skipping expanded states save during restoration', {
+        hasRestored,
+        isRestoring,
+        restorationLock
       });
+      return;
+    }
+    
+    console.log('[NOTES-PAGE] Saving expanded states', {
+      expandedYears: Array.from(expandedYears),
+      expandedSubjects: Array.from(expandedSubjects),
+      expandedYear
+    });
+    
+    const currentScrollY = window.scrollY;
+    
+    // Convert Sets to arrays for saving
+    const expandedYearsArray = Array.from(expandedYears);
+    const expandedSubjectsArray = Array.from(expandedSubjects);
+    
+    const currentState = {
+      scrollY: currentScrollY,
+      expandedYears: expandedYearsArray,
+      expandedSubjects: expandedSubjectsArray,
+      expandedYear,
+      filters
     };
+    
+    console.log('[NOTES-PAGE] Saving expanded states with scroll', {
+      scrollY: currentState.scrollY,
+      expandedYears: currentState.expandedYears,
+      expandedSubjects: currentState.expandedSubjects,
+      expandedYearsCount: currentState.expandedYears.length,
+      expandedSubjectsCount: currentState.expandedSubjects.length,
+      expandedYear: currentState.expandedYear,
+      hasFilters: Object.keys(currentState.filters).length > 0,
+      isRestoring,
+      restorationLock
+    });
+    
+    saveNotesPageState(currentState);
+  };
 
-    // Save scroll position before unmounting (when navigating away)
-    const handleBeforeUnload = () => {
-      saveScrollPosition('notes-page', {
-        x: window.scrollX,
-        y: window.scrollY
-      });
+  // Save state when leaving the page
+  useEffect(() => {
+    // Track last saved state to prevent redundant saves
+    let lastSavedScrollY = -1;
+    let scrollTimeout: NodeJS.Timeout;
+    
+    const saveCurrentScrollState = (forceSave: boolean = false) => {
+      // Don't save during restoration to prevent rapid saves
+      if (isRestoring || restorationLock) {
+        console.log('[NOTES-PAGE] Skipping save during restoration', {
+          isRestoring,
+          restorationLock
+        });
+        return;
+      }
+      
+      const currentScrollY = window.scrollY;
+      
+      // Convert Sets to arrays for saving
+      const expandedYearsArray = Array.from(expandedYears);
+      const expandedSubjectsArray = Array.from(expandedSubjects);
+      
+      // Only save if scroll position has changed significantly (more than 10px) or force save
+      if (forceSave || Math.abs(currentScrollY - lastSavedScrollY) > 10) {
+        const currentState = {
+          scrollY: currentScrollY,
+          expandedYears: expandedYearsArray,
+          expandedSubjects: expandedSubjectsArray,
+          expandedYear,
+          filters
+        };
+        
+        console.log('[NOTES-PAGE] Auto-saving scroll state', {
+          scrollY: currentState.scrollY,
+          expandedYears: currentState.expandedYears,
+          expandedSubjects: currentState.expandedSubjects,
+          expandedYearsCount: currentState.expandedYears.length,
+          expandedSubjectsCount: currentState.expandedSubjects.length,
+          expandedYear: currentState.expandedYear,
+          hasFilters: Object.keys(currentState.filters).length > 0,
+          scrollDelta: Math.abs(currentScrollY - lastSavedScrollY),
+          forceSave,
+          isRestoring
+        });
+        
+        saveNotesPageState(currentState);
+        lastSavedScrollY = currentScrollY;
+      }
     };
 
     // Save position when page is hidden (when navigating to another page)
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
-        saveScrollPosition('notes-page', {
-          x: window.scrollX,
-          y: window.scrollY
-        });
+        console.log('[NOTES-PAGE] Page hidden, saving state immediately');
+        lastSavedScrollY = -1; // Force save on visibility change
+        saveCurrentScrollState();
+        // Set the current path as previous path for when we return
+        sessionStorage.setItem('previous-path', '/notes');
       }
     };
 
-    // Add scroll event listener to save position continuously
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Save position when user is about to leave the page
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    // Save position when page is hidden (navigation)
+    // Save state before page unload
+    const handleBeforeUnload = () => {
+      console.log('[NOTES-PAGE] Page unloading, saving state');
+      lastSavedScrollY = -1; // Force save on unload
+      saveCurrentScrollState();
+      sessionStorage.setItem('previous-path', '/notes');
+    };
+
+    // Save state on scroll (throttled) - only if not currently restoring
+    const handleScroll = () => {
+      if (!hasRestored) {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(saveCurrentScrollState, 300); // Increased debounce time
+      }
+    };
+
+    // Save state when clicking on navigation links
+    const handleLinkClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const link = target.closest('a[href*="/notes/"]');
+      if (link) {
+        console.log('[NOTES-PAGE] Navigation link clicked, saving state');
+        lastSavedScrollY = -1; // Force save on navigation
+        saveCurrentScrollState();
+        sessionStorage.setItem('previous-path', '/notes');
+      }
+    };
+
+    // Add all event listeners
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('click', handleLinkClick);
+
+    // Initial save when component mounts
+    setTimeout(() => {
+      lastSavedScrollY = -1; // Force initial save
+      saveCurrentScrollState();
+    }, 100);
     
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('click', handleLinkClick);
+      clearTimeout(scrollTimeout);
     };
-  }, [saveScrollPosition]);
+  }, [saveNotesPageState, expandedYears, expandedSubjects, expandedYear, filters, hasRestored]);
 
-  // Restore scroll position after content is loaded
+  // Save scroll state when expanded states change
   useEffect(() => {
-    if (!isLoading) {
-      // Use multiple attempts to ensure scroll position is restored
-      const restoreScroll = () => {
-        const savedPosition = restoreScrollPosition('notes-page');
-        if (savedPosition) {
-          console.log('Restoring scroll position:', savedPosition);
-          window.scrollTo(savedPosition.x, savedPosition.y);
-          
-          // Verify the scroll position was applied
-          setTimeout(() => {
-            if (window.scrollY !== savedPosition.y) {
-              console.log('Scroll position not applied, trying again');
-              window.scrollTo(savedPosition.x, savedPosition.y);
-            }
-          }, 50);
-        }
-      };
+    if (hasRestored) return;
+    
+    const timer = setTimeout(() => {
+      saveExpandedStates();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [expandedYears, expandedSubjects, expandedYear, hasRestored]);
 
-      // First attempt after a short delay
-      const timeoutId1 = setTimeout(restoreScroll, 100);
+  // Check if we should restore state when component mounts
+  useEffect(() => {
+    if (!isLoading && !hasRestored && !restorationLock) {
+      // Get the previous path from sessionStorage
+      const storedPreviousPath = sessionStorage.getItem('previous-path');
       
-      // Second attempt after a longer delay to ensure content is fully rendered
-      const timeoutId2 = setTimeout(restoreScroll, 300);
-
-      return () => {
-        clearTimeout(timeoutId1);
-        clearTimeout(timeoutId2);
-      };
+      console.log('[NOTES-PAGE] Checking restoration conditions', {
+        previousPath: storedPreviousPath,
+        currentScrollY: window.scrollY,
+        isLoading,
+        hasRestored,
+        restorationLock
+      });
+      
+      // Only restore state if we're coming from view details page
+      if (storedPreviousPath && shouldPreserveScroll(storedPreviousPath, '/notes')) {
+        console.log('[NOTES-PAGE] Coming from view details, attempting to restore page state');
+        
+        const savedState = getNotesPageState();
+        if (savedState) {
+          console.log('[NOTES-PAGE] Found saved state, restoring', {
+            savedScrollY: savedState.scrollY,
+            expandedYearsCount: savedState.expandedYears.length,
+            expandedSubjectsCount: savedState.expandedSubjects.length,
+            expandedYear: savedState.expandedYear,
+            hasFilters: Object.keys(savedState.filters).length > 0
+          });
+          
+          // Set restoration lock to prevent multiple simultaneous restorations
+          setRestorationLock(true);
+          setIsRestoring(true);
+          
+          // Restore expanded states first
+          console.log('[NOTES-PAGE] 🔧 Restoring expanded states', {
+            expandedYears: savedState.expandedYears,
+            expandedSubjects: savedState.expandedSubjects,
+            expandedYear: savedState.expandedYear
+          });
+          
+          // Restore expanded states in a single batch to prevent corruption
+          const restoredExpandedYears = new Set(savedState.expandedYears);
+          const restoredExpandedSubjects = new Set(savedState.expandedSubjects);
+          
+          setExpandedYears(restoredExpandedYears);
+          setExpandedSubjects(restoredExpandedSubjects);
+          setExpandedYear(savedState.expandedYear);
+          setFilters(savedState.filters);
+          
+          // Wait for DOM to update after state changes, then restore scroll
+          setTimeout(() => {
+            console.log('[NOTES-PAGE] 🚀 Starting enhanced scroll restoration after state update', {
+              targetScrollY: savedState.scrollY,
+              currentScrollY: window.scrollY,
+              expandedYearsCount: restoredExpandedYears.size,
+              expandedSubjectsCount: restoredExpandedSubjects.size,
+              timestamp: new Date().toISOString()
+            });
+            
+            // Verify expanded states were restored correctly
+            console.log('[NOTES-PAGE] 🔍 Verifying restored states', {
+              expandedYears: Array.from(restoredExpandedYears),
+              expandedSubjects: Array.from(restoredExpandedSubjects),
+              expandedYear: savedState.expandedYear
+            });
+            
+            restoreScrollPosition(savedState.scrollY);
+            
+            // Mark as restored to prevent further restoration attempts
+            setHasRestored(true);
+            
+            // Clear restoration flags after a longer delay to ensure scroll restoration completes
+            setTimeout(() => {
+              setIsRestoring(false);
+              setRestorationLock(false);
+              console.log('[NOTES-PAGE] ✅ Restoration completed, re-enabling saves', {
+                finalScrollY: window.scrollY,
+                targetScrollY: savedState.scrollY,
+                difference: Math.abs(window.scrollY - savedState.scrollY)
+              });
+            }, 1500); // Increased delay to ensure all restoration operations complete
+          }, 500); // Increased delay to allow content to fully render after state changes
+          
+        } else {
+          console.log('[NOTES-PAGE] No saved state found, resetting to top');
+          window.scrollTo(0, 0);
+          setHasRestored(true);
+        }
+      } else {
+        // Reset to top for all other navigation scenarios
+        console.log('[NOTES-PAGE] Not from view details - resetting to top', {
+          previousPath: storedPreviousPath,
+          shouldPreserve: storedPreviousPath ? shouldPreserveScroll(storedPreviousPath, '/notes') : false
+        });
+        window.scrollTo(0, 0);
+        clearNotesPageState();
+        setHasRestored(true);
+      }
     }
-  }, [isLoading, restoreScrollPosition]);
+  }, [isLoading, hasRestored, restorationLock, getNotesPageState, clearNotesPageState, shouldPreserveScroll, restoreScrollPosition]);
+
+  // Save current path before unmounting
+  useEffect(() => {
+    return () => {
+      // This will be called when navigating away from notes page
+      // The actual path setting is handled in the visibility change handler
+    };
+  }, []);
 
   useEffect(() => {
     // Don't apply filters - show all notes always
@@ -171,24 +374,30 @@ export default function NotesPage() {
   };
 
   const toggleYearExpansion = (year: string) => {
+    console.log('[NOTES-PAGE] Toggling year expansion', { year, currentlyExpanded: expandedYears.has(year) });
     setExpandedYears(prev => {
       const newSet = new Set(prev);
       if (newSet.has(year)) {
         newSet.delete(year);
+        console.log('[NOTES-PAGE] Collapsed year', { year });
       } else {
         newSet.add(year);
+        console.log('[NOTES-PAGE] Expanded year', { year });
       }
       return newSet;
     });
   };
 
   const toggleSubjectExpansion = (subjectKey: string) => {
+    console.log('[NOTES-PAGE] Toggling subject expansion', { subjectKey, currentlyExpanded: expandedSubjects.has(subjectKey) });
     setExpandedSubjects(prev => {
       const newSet = new Set(prev);
       if (newSet.has(subjectKey)) {
         newSet.delete(subjectKey);
+        console.log('[NOTES-PAGE] Collapsed subject', { subjectKey });
       } else {
         newSet.add(subjectKey);
+        console.log('[NOTES-PAGE] Expanded subject', { subjectKey });
       }
       return newSet;
     });
