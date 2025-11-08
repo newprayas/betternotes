@@ -127,7 +127,7 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Enhanced scroll restoration with smooth animation
+  // Instant scroll restoration (no animation)
   const restoreScrollPosition = (scrollY: number) => {
     // Prevent multiple simultaneous restorations
     if (isRestoringRef.current) {
@@ -141,7 +141,7 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
     // Set restoration lock
     isRestoringRef.current = true;
     
-    debugLog('🚀 Starting smooth scroll position restoration', {
+    debugLog('⚡ Starting instant scroll position restoration', {
       targetScrollY: scrollY,
       currentScrollY: window.scrollY,
       timestamp: new Date().toISOString(),
@@ -160,66 +160,64 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
       clearTimeout(restorationTimeoutRef.current);
     }
     
-    // Smooth scroll to position
+    // Instant scroll to position (no animation)
     window.scrollTo({
       top: scrollY,
       left: 0,
-      behavior: 'smooth'
+      behavior: 'auto' // Instant scroll, no animation
     });
     
-    debugLog('📍 Smooth scroll initiated', { targetScrollY: scrollY });
+    debugLog('⚡ Instant scroll completed', { targetScrollY: scrollY });
     
-    // Wait for smooth scroll to complete, then verify position
-    restorationTimeoutRef.current = setTimeout(() => {
-      const currentScrollY = window.scrollY;
-      const difference = Math.abs(currentScrollY - scrollY);
+    // Verify position immediately (no need to wait for animation)
+    const currentScrollY = window.scrollY;
+    const difference = Math.abs(currentScrollY - scrollY);
+    
+    // Check if we're close enough to the target position (within 10px tolerance)
+    if (difference <= 10) {
+      debugLog('✅ Instant scroll restoration successful', {
+        finalScrollY: currentScrollY,
+        targetY: scrollY,
+        difference: difference
+      });
+    } else {
+      debugLog('⚠️ Instant scroll not precise, applying correction', {
+        finalScrollY: currentScrollY,
+        targetY: scrollY,
+        difference: difference
+      });
       
-      // Check if we're close enough to the target position (within 10px tolerance)
-      if (difference <= 10) {
-        debugLog('✅ Smooth scroll restoration successful', {
-          finalScrollY: currentScrollY,
-          targetY: scrollY,
-          difference: difference
-        });
-      } else {
-        debugLog('⚠️ Smooth scroll not precise, applying correction', {
-          finalScrollY: currentScrollY,
-          targetY: scrollY,
-          difference: difference
-        });
-        
-        // Apply a gentle correction if needed
-        window.scrollTo({
-          top: scrollY,
-          left: 0,
-          behavior: 'smooth'
-        });
-        
-        // Final verification after correction
-        setTimeout(() => {
-          const finalY = window.scrollY;
-          const finalDifference = Math.abs(finalY - scrollY);
-          
-          if (finalDifference <= 10) {
-            debugLog('✅ Scroll correction successful', {
-              finalScrollY: finalY,
-              targetY: scrollY,
-              difference: finalDifference
-            });
-          } else {
-            debugLog('❌ Scroll restoration failed after correction', {
-              finalScrollY: finalY,
-              targetY: scrollY,
-              difference: finalDifference
-            });
-          }
-        }, 300);
-      }
+      // Apply instant correction if needed
+      window.scrollTo({
+        top: scrollY,
+        left: 0,
+        behavior: 'auto'
+      });
       
-      // Release restoration lock after completion
-      isRestoringRef.current = false;
-      restorationTimeoutRef.current = null;
-    }, 800); // Allow time for smooth scroll animation to complete
+      // Final verification after correction
+      setTimeout(() => {
+        const finalY = window.scrollY;
+        const finalDifference = Math.abs(finalY - scrollY);
+        
+        if (finalDifference <= 10) {
+          debugLog('✅ Scroll correction successful', {
+            finalScrollY: finalY,
+            targetY: scrollY,
+            difference: finalDifference
+          });
+        } else {
+          debugLog('❌ Scroll restoration failed after correction', {
+            finalScrollY: finalY,
+            targetY: scrollY,
+            difference: finalDifference
+          });
+        }
+      }, 50); // Very short delay for instant correction
+    }
+    
+    // Release restoration lock immediately
+    isRestoringRef.current = false;
+    restorationTimeoutRef.current = null;
   };
 
   // Determine if scroll should be preserved based on navigation pattern

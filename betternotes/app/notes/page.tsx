@@ -302,9 +302,9 @@ export default function NotesPage() {
               setExpandedYear(savedState.expandedYear);
               setFilters(savedState.filters);
               
-              // Step 4: Wait for DOM to update after all state changes, then restore scroll
+              // Step 4: Wait for DOM to update after all state changes, then restore scroll instantly
               setTimeout(() => {
-                console.log('[NOTES-PAGE] 🚀 Starting enhanced scroll restoration after state update', {
+                console.log('[NOTES-PAGE] ⚡ Starting instant scroll restoration after state update', {
                   targetScrollY: savedState.scrollY,
                   currentScrollY: window.scrollY,
                   expandedYearsCount: restoredExpandedYears.size,
@@ -312,72 +312,23 @@ export default function NotesPage() {
                   timestamp: new Date().toISOString()
                 });
                 
-                // Verify expanded states were restored correctly by checking actual DOM
-                console.log('[NOTES-PAGE] 🔍 Verifying restored states', {
-                  expandedYears: Array.from(restoredExpandedYears),
-                  expandedSubjects: Array.from(restoredExpandedSubjects),
-                  expandedYear: savedState.expandedYear
-                });
-                
-                // Additional verification: Check if DOM elements are actually expanded
-                setTimeout(() => {
-                  const actualExpandedSubjects = new Set<string>();
-                  
-                  // Check subject sections using the correct ID format
-                  restoredExpandedSubjects.forEach(subjectKey => {
-                    const subjectElement = document.getElementById(subjectKey);
-                    if (subjectElement) {
-                      // Check if the subject section is visible by looking for the grid inside
-                      const gridElement = subjectElement.querySelector('.grid') as HTMLElement;
-                      if (gridElement && gridElement.style.display !== 'none') {
-                        actualExpandedSubjects.add(subjectKey);
-                      }
-                    }
-                  });
-                  
-                  console.log('[NOTES-PAGE] 🔍 DOM verification results', {
-                    expectedSubjects: Array.from(restoredExpandedSubjects),
-                    actualSubjects: Array.from(actualExpandedSubjects),
-                    subjectsMatch: actualExpandedSubjects.size === restoredExpandedSubjects.size
-                  });
-                  
-                  // If DOM doesn't match expected state, force a re-render
-                  if (actualExpandedSubjects.size !== restoredExpandedSubjects.size) {
-                    console.log('[NOTES-PAGE] ⚠️ DOM state mismatch, forcing re-render');
-                    // Force a re-render by toggling the states
-                    setExpandedSubjects(new Set());
-                    
-                    setTimeout(() => {
-                      setExpandedYears(restoredExpandedYears);
-                      setExpandedSubjects(restoredExpandedSubjects);
-                      setExpandedYear(savedState.expandedYear);
-                      
-                      // Wait for re-render and then restore scroll
-                      setTimeout(() => {
-                        console.log('[NOTES-PAGE] 🔄 Re-render complete, restoring scroll');
-                        restoreScrollPosition(savedState.scrollY);
-                      }, 300);
-                    }, 100);
-                  } else {
-                    // DOM matches expected state, proceed with scroll restoration
-                    restoreScrollPosition(savedState.scrollY);
-                  }
-                }, 200); // Wait for DOM to update before verification
+                // Instant scroll restoration - no animation, no complex verification
+                restoreScrollPosition(savedState.scrollY);
                 
                 // Mark as restored to prevent further restoration attempts
                 setHasRestored(true);
                 
-                // Clear restoration flags after a longer delay to ensure scroll restoration completes
+                // Clear restoration flags after a short delay since scroll is instant
                 setTimeout(() => {
                   setIsRestoring(false);
                   setRestorationLock(false);
-                  console.log('[NOTES-PAGE] ✅ Restoration completed, re-enabling saves', {
+                  console.log('[NOTES-PAGE] ✅ Instant restoration completed, re-enabling saves', {
                     finalScrollY: window.scrollY,
                     targetScrollY: savedState.scrollY,
                     difference: Math.abs(window.scrollY - savedState.scrollY)
                   });
-                }, 1500); // Increased delay to ensure all restoration operations complete
-              }, 500); // Increased delay to allow content to fully render after state changes
+                }, 200); // Short delay since scroll is instant
+              }, 300); // Reduced delay - no need to wait for complex verification
             }, 100); // Delay between subject and year/filter restoration
           }, 100); // Delay between years and subjects restoration
           
