@@ -1,38 +1,24 @@
-import { createClient } from '@sanity/client'
+const fs = require('fs');
+const path = require('path');
 
-// Initialize the Sanity client
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 't1y8nndf',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  useCdn: false,
-  apiVersion: '2023-04-01',
-  token: process.env.SANITY_API_TOKEN,
-})
-
-// Function to create a slug from a title
+// Function to create a slug from a title (for folder names)
 function createSlug(title) {
   return title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
+    .substring(0, 100); // Limit length for file system compatibility
 }
 
-// Function to extract price number from price string
-function extractPrice(priceStr) {
-  // Extract the first number found in the string
-  const match = priceStr.match(/\d+/);
-  return match ? parseInt(match[0]) : 0;
+// Function to sanitize folder names (remove special characters that cause issues)
+function sanitizeFolderName(name) {
+  return name
+    .replace(/[\/\\:*?"<>|]/g, '-') // Replace invalid file system characters with dash
+    .replace(/--+/g, '-') // Replace multiple dashes with single dash
+    .replace(/^-|-$/g, ''); // Remove leading/trailing dashes
 }
 
-// Function to extract page number from page string
-function extractPageNumber(pageStr) {
-  if (!pageStr) return null;
-  // Extract the first number found in the string
-  const match = pageStr.match(/\d+/);
-  return match ? parseInt(match[0]) : null;
-}
-
-// Define all the notes data
+// Define all the notes data (same as in add-notes.js)
 const notesData = [
   // 3rd Year Notes
   {
@@ -180,95 +166,63 @@ const notesData = [
       { title: 'WHOLE 5TH YEAR NOTES BUNDLE (All PROF Written and Viva + Ward notes + Clinical notes)', price: '1480' }
     ]
   }
-]
+];
 
-async function addNotes() {
-  console.log('Starting to add notes to Sanity Studio...')
+// Base directory for all folders
+const baseDirectory = '/Users/pustak/Downloads/Images to upload';
+
+function createFolderStructure() {
+  console.log('Creating folder structure...');
   
-  try {
-    // Step 1: Fetch all subjects to create a reference map
-    console.log('Fetching subjects from Sanity...')
-    const subjects = await client.fetch(`*[_type == "subject"]`)
+  // Create the base directory if it doesn't exist
+  if (!fs.existsSync(baseDirectory)) {
+    fs.mkdirSync(baseDirectory, { recursive: true });
+    console.log(`Created base directory: ${baseDirectory}`);
+  }
+  
+  let yearsCreated = 0;
+  let subjectsCreated = 0;
+  let noteFoldersCreated = 0;
+  
+  // Process each year
+  for (const yearData of notesData) {
+    const yearPath = path.join(baseDirectory, yearData.year);
     
-    // Create a map of subject names to their references
-    const subjectMap = {}
-    subjects.forEach(subject => {
-      subjectMap[subject.name] = {
-        _type: 'reference',
-        _ref: subject._id
-      }
-    })
-    
-    console.log(`Found ${subjects.length} subjects in Sanity`)
-    
-    // Special handling for Eye-ENT combined notes
-    const eyeEntSubject = subjectMap['Eye (Ophthalmology)'] || subjectMap['ENT (Otolaryngology)']
-    
-    let createdCount = 0
-    let skippedCount = 0
-    
-    // Step 2: Process each note
-    for (const yearData of notesData) {
-      for (const subjectData of yearData.notes) {
-        const noteTitle = subjectData.title
-        const notePrice = extractPrice(subjectData.price)
-        const pageNumber = subjectData.pages ? extractPageNumber(subjectData.pages) : null
-        
-        // Determine the subject reference
-        let subjectRef = null
-        if (subjectData.subject === 'Bundle') {
-          // For bundles, don't assign a subject
-          subjectRef = null
-        } else if (yearData.subject === 'Eye-ENT') {
-          // For Eye-ENT combined, use Eye subject
-          subjectRef = subjectMap['Eye (Ophthalmology)']
-        } else {
-          subjectRef = subjectMap[yearData.subject]
-        }
-        
-        // Check if note already exists
-        const existing = await client.fetch(
-          `*[_type == "note" && title == $title][0]`,
-          { title: noteTitle }
-        )
-        
-        if (!existing) {
-          // Create the note document
-          const noteDoc = {
-            _type: 'note',
-            title: noteTitle,
-            slug: {
-              _type: 'slug',
-              current: createSlug(noteTitle),
-            },
-            price: notePrice,
-            academicYear: yearData.year,
-            ...(subjectRef && { subject: subjectRef }),
-            ...(pageNumber && { pageNumber }),
-            tags: [yearData.year.replace('-', ' '), yearData.subject.toLowerCase()],
-            featured: false,
-          }
-          
-          const newNote = await client.create(noteDoc)
-          createdCount++
-          console.log(`✅ Created note: ${noteTitle}`)
-        } else {
-          skippedCount++
-          console.log(`⏭️  Note already exists: ${noteTitle}`)
-        }
-      }
+    // Create year folder if it doesn't exist
+    if (!fs.existsSync(yearPath)) {
+      fs.mkdirSync(yearPath);
+      yearsCreated++;
+      console.log(`Created year folder: ${yearData.year}`);
     }
     
-    console.log('\n=== Summary ===')
-    console.log(`✅ Created: ${createdCount} new notes`)
-    console.log(`⏭️  Skipped: ${skippedCount} existing notes`)
-    console.log('All notes have been processed successfully!')
+    // Create subject folder
+    const sanitizedSubjectName = sanitizeFolderName(yearData.subject);
+    const subjectPath = path.join(yearPath, sanitizedSubjectName);
+    if (!fs.existsSync(subjectPath)) {
+      fs.mkdirSync(subjectPath);
+      subjectsCreated++;
+      console.log(`Created subject folder: ${yearData.subject} -> ${sanitizedSubjectName}`);
+    }
     
-  } catch (error) {
-    console.error('❌ Error adding notes:', error)
-    process.exit(1)
+    // Create folders for each note
+    for (const note of yearData.notes) {
+      const noteFolderName = sanitizeFolderName(note.title);
+      const notePath = path.join(subjectPath, noteFolderName);
+      
+      if (!fs.existsSync(notePath)) {
+        fs.mkdirSync(notePath);
+        noteFoldersCreated++;
+        console.log(`Created note folder: ${note.title} -> ${noteFolderName}`);
+      }
+    }
   }
+  
+  console.log('\n=== Summary ===');
+  console.log(`✅ Created: ${yearsCreated} year folders`);
+  console.log(`✅ Created: ${subjectsCreated} subject folders`);
+  console.log(`✅ Created: ${noteFoldersCreated} note folders`);
+  console.log('Folder structure created successfully!');
 }
 
 // Run the script
-addNotes()
+createFolderStructure();

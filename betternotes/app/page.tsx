@@ -91,26 +91,26 @@ export default async function Home() {
                     <ul className="space-y-3 text-gray-700 text-center">
                       <li className="flex flex-col items-center justify-center">
                         <span className="mb-1">🎯 How to study?</span>
-                        <span>To understand and do well in exams ✨</span>
+                        <span>In the most effective way ✨</span>
                       </li>
                       <li className="flex flex-col items-center justify-center">
-                        <span className="mb-1">🎯 Which questions come during exams?</span>
-                        <span>To focus on what matters. ✨</span>
+                        <span className="mb-1">🎯 Which questions are important?</span>
+                        <span>For each exam ✨</span>
                       </li>
                       <li className="flex flex-col items-center justify-center">
                         <span className="mb-1">🎯 How to answer in exams?</span>
                         <span>The best practices ✨</span>
                       </li>
                       <li className="flex flex-col items-center justify-center">
-                        <span className="mb-1">🎯 What to focus on for exams? What to skip?</span>
+                        <span className="mb-1">🎯 What to focus on for exams?</span>
                         <span>To study effiecntly ✨</span>
                       </li>
                       <li className="flex flex-col items-center justify-center">
                         <span className="mb-1">🎯 What resources I use in my own studies?</span>
-                        <span>To make studing EASIER and enjoyable ✨</span>
+                        <span>To make studing easier ✨</span>
                       </li>
                       <li className="flex items-center justify-center">
-                        <span>And MORE! 🎉</span>
+                        <span>And MUCH MORE! 🎉</span>
                       </li>
                     </ul>
                   </div>
