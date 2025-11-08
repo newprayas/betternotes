@@ -228,14 +228,24 @@ export default function NotesPage() {
 
   // Save scroll state when expanded states change
   useEffect(() => {
-    if (hasRestored) return;
+    // Block ALL saves during restoration to prevent corruption
+    if (hasRestored || isRestoring || restorationLock) {
+      console.log('[NOTES-PAGE] Skipping expanded states save during restoration (useEffect)', {
+        hasRestored,
+        isRestoring,
+        restorationLock,
+        expandedYearsCount: expandedYears.size,
+        expandedSubjectsCount: expandedSubjects.size
+      });
+      return;
+    }
     
     const timer = setTimeout(() => {
       saveExpandedStates();
     }, 100);
     
     return () => clearTimeout(timer);
-  }, [expandedYears, expandedSubjects, expandedYear, hasRestored]);
+  }, [expandedYears, expandedSubjects, expandedYear, hasRestored, isRestoring, restorationLock]);
 
   // Check if we should restore state when component mounts
   useEffect(() => {
@@ -276,48 +286,100 @@ export default function NotesPage() {
             expandedYear: savedState.expandedYear
           });
           
-          // Restore expanded states in a single batch to prevent corruption
+          // Restore expanded states in sequence to ensure proper state updates
           const restoredExpandedYears = new Set(savedState.expandedYears);
           const restoredExpandedSubjects = new Set(savedState.expandedSubjects);
           
+          // Step 1: Restore expanded years first
           setExpandedYears(restoredExpandedYears);
-          setExpandedSubjects(restoredExpandedSubjects);
-          setExpandedYear(savedState.expandedYear);
-          setFilters(savedState.filters);
           
-          // Wait for DOM to update after state changes, then restore scroll
+          // Step 2: After a short delay, restore expanded subjects
           setTimeout(() => {
-            console.log('[NOTES-PAGE] 🚀 Starting enhanced scroll restoration after state update', {
-              targetScrollY: savedState.scrollY,
-              currentScrollY: window.scrollY,
-              expandedYearsCount: restoredExpandedYears.size,
-              expandedSubjectsCount: restoredExpandedSubjects.size,
-              timestamp: new Date().toISOString()
-            });
+            setExpandedSubjects(restoredExpandedSubjects);
             
-            // Verify expanded states were restored correctly
-            console.log('[NOTES-PAGE] 🔍 Verifying restored states', {
-              expandedYears: Array.from(restoredExpandedYears),
-              expandedSubjects: Array.from(restoredExpandedSubjects),
-              expandedYear: savedState.expandedYear
-            });
-            
-            restoreScrollPosition(savedState.scrollY);
-            
-            // Mark as restored to prevent further restoration attempts
-            setHasRestored(true);
-            
-            // Clear restoration flags after a longer delay to ensure scroll restoration completes
+            // Step 3: After another short delay, restore expanded year and filters
             setTimeout(() => {
-              setIsRestoring(false);
-              setRestorationLock(false);
-              console.log('[NOTES-PAGE] ✅ Restoration completed, re-enabling saves', {
-                finalScrollY: window.scrollY,
-                targetScrollY: savedState.scrollY,
-                difference: Math.abs(window.scrollY - savedState.scrollY)
-              });
-            }, 1500); // Increased delay to ensure all restoration operations complete
-          }, 500); // Increased delay to allow content to fully render after state changes
+              setExpandedYear(savedState.expandedYear);
+              setFilters(savedState.filters);
+              
+              // Step 4: Wait for DOM to update after all state changes, then restore scroll
+              setTimeout(() => {
+                console.log('[NOTES-PAGE] 🚀 Starting enhanced scroll restoration after state update', {
+                  targetScrollY: savedState.scrollY,
+                  currentScrollY: window.scrollY,
+                  expandedYearsCount: restoredExpandedYears.size,
+                  expandedSubjectsCount: restoredExpandedSubjects.size,
+                  timestamp: new Date().toISOString()
+                });
+                
+                // Verify expanded states were restored correctly by checking actual DOM
+                console.log('[NOTES-PAGE] 🔍 Verifying restored states', {
+                  expandedYears: Array.from(restoredExpandedYears),
+                  expandedSubjects: Array.from(restoredExpandedSubjects),
+                  expandedYear: savedState.expandedYear
+                });
+                
+                // Additional verification: Check if DOM elements are actually expanded
+                setTimeout(() => {
+                  const actualExpandedSubjects = new Set<string>();
+                  
+                  // Check subject sections using the correct ID format
+                  restoredExpandedSubjects.forEach(subjectKey => {
+                    const subjectElement = document.getElementById(subjectKey);
+                    if (subjectElement) {
+                      // Check if the subject section is visible by looking for the grid inside
+                      const gridElement = subjectElement.querySelector('.grid') as HTMLElement;
+                      if (gridElement && gridElement.style.display !== 'none') {
+                        actualExpandedSubjects.add(subjectKey);
+                      }
+                    }
+                  });
+                  
+                  console.log('[NOTES-PAGE] 🔍 DOM verification results', {
+                    expectedSubjects: Array.from(restoredExpandedSubjects),
+                    actualSubjects: Array.from(actualExpandedSubjects),
+                    subjectsMatch: actualExpandedSubjects.size === restoredExpandedSubjects.size
+                  });
+                  
+                  // If DOM doesn't match expected state, force a re-render
+                  if (actualExpandedSubjects.size !== restoredExpandedSubjects.size) {
+                    console.log('[NOTES-PAGE] ⚠️ DOM state mismatch, forcing re-render');
+                    // Force a re-render by toggling the states
+                    setExpandedSubjects(new Set());
+                    
+                    setTimeout(() => {
+                      setExpandedYears(restoredExpandedYears);
+                      setExpandedSubjects(restoredExpandedSubjects);
+                      setExpandedYear(savedState.expandedYear);
+                      
+                      // Wait for re-render and then restore scroll
+                      setTimeout(() => {
+                        console.log('[NOTES-PAGE] 🔄 Re-render complete, restoring scroll');
+                        restoreScrollPosition(savedState.scrollY);
+                      }, 300);
+                    }, 100);
+                  } else {
+                    // DOM matches expected state, proceed with scroll restoration
+                    restoreScrollPosition(savedState.scrollY);
+                  }
+                }, 200); // Wait for DOM to update before verification
+                
+                // Mark as restored to prevent further restoration attempts
+                setHasRestored(true);
+                
+                // Clear restoration flags after a longer delay to ensure scroll restoration completes
+                setTimeout(() => {
+                  setIsRestoring(false);
+                  setRestorationLock(false);
+                  console.log('[NOTES-PAGE] ✅ Restoration completed, re-enabling saves', {
+                    finalScrollY: window.scrollY,
+                    targetScrollY: savedState.scrollY,
+                    difference: Math.abs(window.scrollY - savedState.scrollY)
+                  });
+                }, 1500); // Increased delay to ensure all restoration operations complete
+              }, 500); // Increased delay to allow content to fully render after state changes
+            }, 100); // Delay between subject and year/filter restoration
+          }, 100); // Delay between years and subjects restoration
           
         } else {
           console.log('[NOTES-PAGE] No saved state found, resetting to top');
