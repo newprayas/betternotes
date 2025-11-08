@@ -142,8 +142,8 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="pt-6 pb-6 bg-white">
+        {/* Features Section - Hidden */}
+        {/* <section className="pt-6 pb-6 bg-white">
           <div className="container">
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center gap-3">
@@ -184,7 +184,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Image Slideshow Section */}
         <section className="py-12 md:py-16 bg-gray-50">
@@ -205,7 +205,7 @@ export default async function Home() {
               <br />
               Hope it will help you understand complex concepts and score better in your exams ✨
             </p>
-            <Link href="/notes" className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors inline-flex whitespace-nowrap">
+            <Link href="/notes" className="btn-gradient-border inline-flex whitespace-nowrap">
               SEE ALL NOTES
             </Link>
           </div>

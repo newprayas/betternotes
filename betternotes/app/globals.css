@@ -72,6 +72,64 @@ body {
   line-height: 1.2;
 }
 
+/* Animated gradient border for buttons */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-gradient {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+.btn-gradient-border {
+  position: relative;
+  background: var(--btn-bg, rgb(250, 204, 21)); /* yellow-400 */
+  padding: 1rem 2.5rem;
+  border-radius: 0.75rem;
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  color: black;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  font-family: "Alkatra", system-ui;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.btn-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 0.75rem;
+  padding: 6px;
+  background: conic-gradient(
+    from var(--gradient-angle),
+    #ff6b6b,
+    #4ecdc4,
+    #45b7d1,
+    #96ceb4,
+    #ffeaa7,
+    #ff6b6b
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotate-gradient 3s linear infinite;
+}
+
+.btn-gradient-border:hover {
+  transform: translateY(-3px) scale(1.05);
+  --btn-bg: rgb(250, 191, 36); /* yellow-500 - slightly darker on hover */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
 /* Mobile-first responsive utilities */
 @media (min-width: 640px) {
   .container {

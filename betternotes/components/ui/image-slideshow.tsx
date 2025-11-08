@@ -42,7 +42,7 @@ const ImageSlideshow = () => {
 
   return (
     <div
-      className="relative w-full h-96 md:h-[32rem] overflow-hidden bg-gray-100 rounded-lg"
+      className="relative w-11/12 md:w-4/5 lg:w-3/4 h-[28rem] md:h-[40rem] overflow-hidden bg-gray-100 rounded-lg mx-auto"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
