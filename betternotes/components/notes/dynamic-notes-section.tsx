@@ -50,9 +50,11 @@ export default function DynamicNotesSection({ notes, academicYear, subject, isEx
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
               <h3 className="text-xl font-bold">{note.title || 'Untitled Note'}</h3>
               <div className="flex items-center gap-2 sm:gap-3 text-sm">
-                <div className="bg-green-50 px-2 py-1 font-semibold text-black whitespace-nowrap">
-                  {note.pageNumber ? `${note.pageNumber} pages` : 'N/A'}
-                </div>
+                {note.pageNumber && (
+                  <div className="bg-green-50 px-2 py-1 font-semibold text-black whitespace-nowrap">
+                    {note.pageNumber} pages
+                  </div>
+                )}
                 <div className="bg-green-50 px-2 py-1 font-semibold text-black whitespace-nowrap">
                   {note.originalPrice && (
                     <span className="text-gray-500 line-through mr-1">
