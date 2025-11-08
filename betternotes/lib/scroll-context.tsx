@@ -127,7 +127,7 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Enhanced scroll restoration with multiple attempts and better timing
+  // Enhanced scroll restoration with smooth animation
   const restoreScrollPosition = (scrollY: number) => {
     // Prevent multiple simultaneous restorations
     if (isRestoringRef.current) {
@@ -141,7 +141,7 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
     // Set restoration lock
     isRestoringRef.current = true;
     
-    debugLog('🚀 Starting enhanced scroll position restoration', {
+    debugLog('🚀 Starting smooth scroll position restoration', {
       targetScrollY: scrollY,
       currentScrollY: window.scrollY,
       timestamp: new Date().toISOString(),
@@ -160,82 +160,66 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
       clearTimeout(restorationTimeoutRef.current);
     }
     
-    // Immediate attempt
-    window.scrollTo(0, scrollY);
-    debugLog('📍 Immediate scroll attempt', { afterScrollY: window.scrollY });
+    // Smooth scroll to position
+    window.scrollTo({
+      top: scrollY,
+      left: 0,
+      behavior: 'smooth'
+    });
     
-    // First retry after 100ms - allow for initial render
-    setTimeout(() => {
-      window.scrollTo(0, scrollY);
-      debugLog('📍 First retry (100ms)', { afterScrollY: window.scrollY });
-    }, 100);
+    debugLog('📍 Smooth scroll initiated', { targetScrollY: scrollY });
     
-    // Second retry after 300ms - allow for content to settle
-    setTimeout(() => {
-      window.scrollTo(0, scrollY);
-      debugLog('📍 Second retry (300ms)', { afterScrollY: window.scrollY });
-    }, 300);
-    
-    // Third retry after 600ms - allow for any dynamic content
-    setTimeout(() => {
-      window.scrollTo(0, scrollY);
-      debugLog('📍 Third retry (600ms)', { afterScrollY: window.scrollY });
-    }, 600);
-    
-    // Final retry after 1000ms with force and comprehensive check
+    // Wait for smooth scroll to complete, then verify position
     restorationTimeoutRef.current = setTimeout(() => {
-      window.scrollTo(0, scrollY);
+      const currentScrollY = window.scrollY;
+      const difference = Math.abs(currentScrollY - scrollY);
       
-      // Force scroll if still not at position
-      if (Math.abs(window.scrollY - scrollY) > 5) {
-        debugLog('🔧 Using forced scroll methods', {
-          beforeForceY: window.scrollY,
+      // Check if we're close enough to the target position (within 10px tolerance)
+      if (difference <= 10) {
+        debugLog('✅ Smooth scroll restoration successful', {
+          finalScrollY: currentScrollY,
           targetY: scrollY,
-          difference: Math.abs(window.scrollY - scrollY)
+          difference: difference
+        });
+      } else {
+        debugLog('⚠️ Smooth scroll not precise, applying correction', {
+          finalScrollY: currentScrollY,
+          targetY: scrollY,
+          difference: difference
         });
         
-        // Try multiple scroll methods
-        document.documentElement.scrollTop = scrollY;
-        document.body.scrollTop = scrollY;
-        window.scrollTo(0, scrollY);
+        // Apply a gentle correction if needed
+        window.scrollTo({
+          top: scrollY,
+          left: 0,
+          behavior: 'smooth'
+        });
         
-        // Final verification
+        // Final verification after correction
         setTimeout(() => {
           const finalY = window.scrollY;
-          const success = Math.abs(finalY - scrollY) <= 5;
+          const finalDifference = Math.abs(finalY - scrollY);
           
-          if (success) {
-            debugLog('✅ Scroll restoration successful', {
+          if (finalDifference <= 10) {
+            debugLog('✅ Scroll correction successful', {
               finalScrollY: finalY,
               targetY: scrollY,
-              difference: Math.abs(finalY - scrollY)
+              difference: finalDifference
             });
           } else {
-            debugLog('❌ Scroll restoration failed', {
+            debugLog('❌ Scroll restoration failed after correction', {
               finalScrollY: finalY,
               targetY: scrollY,
-              difference: Math.abs(finalY - scrollY),
-              pageHeight: document.documentElement.scrollHeight,
-              viewportHeight: window.innerHeight
+              difference: finalDifference
             });
           }
-          
-          // Release restoration lock after completion
-          isRestoringRef.current = false;
-          restorationTimeoutRef.current = null;
-        }, 50);
-      } else {
-        debugLog('✅ Scroll restoration successful', {
-          finalScrollY: window.scrollY,
-          targetY: scrollY,
-          difference: Math.abs(window.scrollY - scrollY)
-        });
-        
-        // Release restoration lock after completion
-        isRestoringRef.current = false;
-        restorationTimeoutRef.current = null;
+        }, 300);
       }
-    }, 1000);
+      
+      // Release restoration lock after completion
+      isRestoringRef.current = false;
+      restorationTimeoutRef.current = null;
+    }, 800); // Allow time for smooth scroll animation to complete
   };
 
   // Determine if scroll should be preserved based on navigation pattern
