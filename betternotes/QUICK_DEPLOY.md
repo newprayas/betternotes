@@ -18,10 +18,11 @@ Follow the prompts to push to your new repository.
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Click "Add New..." → "Project"
 3. Import `betternotes` repository
-4. Add environment variables:
+4. **IMPORTANT**: Set Root Directory to `betternotes` in project settings
+5. Add environment variables:
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`: Your Sanity project ID
    - `NEXT_PUBLIC_SANITY_DATASET`: `production`
-5. Click "Deploy"
+6. Click "Deploy"
 
 ### ✅ Done!
 Your site will be live at `your-project-name.vercel.app`

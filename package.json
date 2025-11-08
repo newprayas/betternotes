@@ -3,13 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install": "cd betternotes && npm install",
-    "build": "cd betternotes && npm run build",
-    "dev": "cd betternotes && npm run dev",
-    "start": "cd betternotes && npm start"
-  },
-  "dependencies": {
-    "next": "16.0.1"
+    "dev": "cd betternotes && npm run dev"
   },
   "engines": {
     "node": ">=18.0.0"

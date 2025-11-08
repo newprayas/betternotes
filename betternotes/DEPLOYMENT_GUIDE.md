@@ -43,8 +43,12 @@ git push -u origin main
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Click "Add New..." → "Project"
 3. Import the `betternotes` repository from GitHub
-4. Vercel will automatically detect it's a Next.js project
-5. Click "Deploy"
+4. **IMPORTANT**: Before deploying, configure the Root Directory:
+   - Click "Settings" tab
+   - Select "General" from the left menu
+   - Find "Root Directory" setting and change it to `betternotes`
+   - Click "Save"
+5. Go back to the "Deploy" tab and click "Deploy"
 
 ## Step 4: Configure Environment Variables
 
